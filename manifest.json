@@ -1,0 +1,25 @@
+{
+  "name": "Captivate Field Tune Up",
+  "short_name": "Tune Up",
+  "description": "Captivate field tune up assessment tool",
+  "start_url": "tune_up_field.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#001E61",
+  "theme_color": "#001E61",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

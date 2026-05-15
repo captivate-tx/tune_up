@@ -1,0 +1,3494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Captivate Field Tune Up</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#001E61">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tune Up">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  :root {
+    --navy: #001E61;
+    --yellow: #F6D44D;
+    --green: #80BC00;
+    --red: #E02826;
+    --light-gray: #f5f5f7;
+    --border: #ddd;
+    --text: #1a1a1a;
+    --muted: #666;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Arial, sans-serif; background: var(--light-gray); color: var(--text); font-size: 15px; }
+  .header { background: var(--navy); color: white; padding: 24px 32px; display: flex; align-items: center; gap: 20px; }
+  .header img, #captivateLogo { width: 90px; height: 90px; object-fit: contain; display: block; }
+  .header-text h1 { font-size: 26px; font-weight: 700; }
+  .header-text p { font-size: 13px; opacity: 0.75; margin-top: 3px; }
+  .header-right { margin-left: auto; text-align: right; font-size: 12px; opacity: 0.8; line-height: 1.7; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  .card { background: white; border-radius: 12px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .card-header { background: var(--navy); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+  .card-header h2 { font-size: 16px; font-weight: 700; }
+  .card-header .section-icon { font-size: 18px; }
+  .card-body { padding: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--border); border-radius: 7px; padding: 9px 12px; font-size: 14px; color: var(--text); background: white; font-family: inherit; transition: border 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--navy); }
+  .form-group textarea { resize: vertical; min-height: 72px; }
+  .membership-selector { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mem-btn { padding: 8px 16px; border-radius: 20px; border: 2px solid var(--border); background: white; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); transition: all 0.2s; }
+  .mem-btn.active { border-color: var(--navy); background: var(--navy); color: white; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .sub-header { font-size: 13px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); display: inline-block; }
+  .wifi-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+  .wifi-table th { background: var(--navy); color: white; padding: 8px 10px; font-size: 12px; text-align: left; font-weight: 600; }
+  .wifi-table td { padding: 6px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .wifi-table td input { border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 13px; width: 100%; font-family: inherit; }
+  .add-row-btn { background: none; border: 2px dashed var(--border); color: var(--navy); padding: 8px 16px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; margin-top: 6px; transition: all 0.2s; }
+  .add-row-btn:hover { border-color: var(--navy); background: #f0f3fa; }
+  .wifi-row-delete { background: none; border: none; color: #ccc; cursor: pointer; font-size: 16px; padding: 4px 8px; border-radius: 4px; }
+  .wifi-row-delete:hover { color: var(--red); }
+  .rag-selector { display: flex; gap: 4px; justify-content: center; }
+  .rag-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; font-size: 0; }
+  .rag-btn.na-btn { font-size: 9px; font-weight: 700; color: #999; display: inline-flex; align-items: center; justify-content: center; }
+  .rag-btn.green { background: #e8f5d0; border-color: #c5e088; }
+  .rag-btn.yellow { background: #fef9e0; border-color: #f0d870; }
+  .rag-btn.red { background: #fde8e8; border-color: #f0aaaa; }
+  .rag-btn.na-btn { background: #f0f0f0; border-color: #ccc; }
+  .rag-btn.green.active { background: var(--green); border-color: #5a9400; box-shadow: 0 0 0 3px rgba(128,188,0,0.25); }
+  .rag-btn.yellow.active { background: var(--yellow); border-color: #c9a800; box-shadow: 0 0 0 3px rgba(246,212,77,0.35); }
+  .rag-btn.red.active { background: var(--red); border-color: #aa1010; box-shadow: 0 0 0 3px rgba(224,40,38,0.25); }
+  .rag-btn.na-btn.active { background: #bbb; border-color: #999; color: white; }
+  .checklist { width: 100%; border-collapse: collapse; }
+  .checklist th { font-size: 11px; color: var(--muted); font-weight: 600; padding: 4px 6px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+  .checklist th.left { text-align: left; }
+  .checklist td { padding: 8px 8px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  .checklist td.item-label { font-size: 14px; line-height: 1.4; }
+  .checklist td.rag-cell { text-align: center; white-space: nowrap; }
+  .checklist tr:hover td { background: #fafafa; }
+  .checklist tr:last-child td { border-bottom: none; }
+  .rag-legend { display: flex; gap: 14px; align-items: center; font-size: 11px; color: var(--muted); margin-bottom: 10px; flex-wrap: wrap; }
+  .mark-na-btn {
+    margin-left: auto; background: white; border: 1px solid var(--border);
+    color: var(--muted); padding: 5px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit;
+    letter-spacing: 0.3px;
+  }
+  .mark-na-btn:hover { border-color: var(--navy); color: var(--navy); background: #f5f7fc; }
+  @media print { .mark-na-btn { display: none; } }
+  .rag-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .rag-dot.green { background: var(--green); }
+  .rag-dot.yellow { background: var(--yellow); border: 1px solid #c9a800; }
+  .rag-dot.red { background: var(--red); }
+  .rag-dot.na { background: #bbb; }
+  .health-dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .health-card { border-radius: 10px; padding: 14px 12px; text-align: center; }
+  .health-card.green { background: #e8f5d0; border: 2px solid var(--green); }
+  .health-card.yellow { background: #fef9e0; border: 2px solid var(--yellow); }
+  .health-card.red { background: #fde8e8; border: 2px solid var(--red); }
+  .health-card.na { background: #f0f0f0; border: 2px solid #ccc; }
+  .health-card .count { font-size: 32px; font-weight: 800; line-height: 1; }
+  .health-card.green .count { color: #4a7a00; }
+  .health-card.yellow .count { color: #8a6e00; }
+  .health-card.red .count { color: #aa1010; }
+  .health-card.na .count { color: #888; }
+  .health-card .hlabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; color: var(--muted); }
+  .health-note { font-size: 12px; color: var(--muted); margin-top: 12px; padding: 10px; background: var(--light-gray); border-radius: 7px; text-align: center; }
+  .finding-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .finding-item:last-child { border-bottom: none; }
+  .finding-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+  .finding-dot.red { background: var(--red); }
+  .finding-dot.yellow { background: var(--yellow); border: 1px solid #c9a800; }
+  .finding-text { font-size: 14px; flex: 1; }
+  .empty-findings { color: var(--muted); font-size: 13px; text-align: center; padding: 20px; }
+  .print-summary { display: none; }
+  .notes-section { margin-top: 14px; }
+  .notes-section label { font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+  .notes-section textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 14px; font-family: inherit; resize: vertical; min-height: 72px; }
+  .updates-field { margin-bottom: 14px; }
+  .updates-field label { font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+  .updates-field input { width: 100%; border: 1.5px solid var(--border); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
+  .updates-field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; min-height: 64px; resize: vertical; }
+  .photo-upload-area { border: 2px dashed var(--border); border-radius: 10px; padding: 30px; text-align: center; color: var(--muted); cursor: pointer; }
+  .photo-upload-area input { display: none; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 12px; }
+  .photo-thumb { position: relative; border-radius: 7px; overflow: hidden; aspect-ratio: 1/1; }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-thumb .remove-photo { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; }
+  .action-bar { position: sticky; bottom: 0; background: white; border-top: 1px solid var(--border); padding: 14px 20px; display: flex; gap: 10px; justify-content: flex-end; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.07); }
+  .btn { padding: 10px 22px; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-secondary { background: white; color: var(--navy); border: 2px solid var(--navy); }
+  .btn-success { background: var(--green); color: white; }
+  .signoff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* SECTION ANCHOR NAV */
+  .section-nav {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .section-nav .navchip {
+    display: inline-block; padding: 6px 12px; margin-right: 6px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 999px; font-size: 12px; font-weight: 600;
+    color: var(--muted); cursor: pointer; transition: all 0.15s ease;
+    font-family: inherit; text-decoration: none;
+  }
+  .section-nav .navchip:hover { border-color: var(--navy); color: var(--navy); }
+  .section-nav .navchip.active {
+    background: var(--navy); color: white; border-color: var(--navy);
+  }
+  @media print { .section-nav { display: none; } }
+
+  /* RECENT VISITS PANEL */
+  .recent-wrap { position: relative; }
+  .recent-panel {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 0;
+    min-width: 260px; max-width: 340px;
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(15,23,42,0.15); padding: 8px; z-index: 60;
+  }
+  .recent-panel.visible { display: block; }
+  .recent-list { display: flex; flex-direction: column; gap: 6px; }
+  .recent-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 8px 10px; border-radius: 8px;
+    background: #f5f7fc; font-size: 13px;
+  }
+  .recent-item strong { color: var(--navy); }
+  @media print { .recent-wrap { display: none; } }
+
+  /* FINISH VISIT DROPDOWN */
+  .finish-menu { position: relative; }
+  .finish-menu-list {
+    display: none; position: absolute; bottom: calc(100% + 8px); right: 0;
+    min-width: 260px; background: white; border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 12px 30px rgba(15,23,42,0.15);
+    padding: 6px; z-index: 60;
+  }
+  .finish-menu-list button {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: none; border: none; padding: 10px 12px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer;
+    text-align: left; font-family: inherit;
+  }
+  .finish-menu-list button:hover { background: #f5f7fc; color: var(--navy); }
+  .finish-menu.open .finish-menu-list { display: block; }
+  @media print { .finish-menu { display: none; } }
+
+  /* DICTATION HINT */
+  .dictation-hint {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--navy-50, #eef1f8); color: var(--navy);
+    border: 1px solid #d2dbed; border-radius: 8px;
+    padding: 8px 12px; font-size: 12px; margin-bottom: 14px;
+    position: relative;
+  }
+  .dictation-hint .ico { font-size: 16px; }
+  .dictation-hint .dismiss {
+    margin-left: auto; background: none; border: none; color: var(--navy);
+    cursor: pointer; font-size: 16px; padding: 2px 6px; line-height: 1;
+    border-radius: 50%;
+  }
+  .dictation-hint .dismiss:hover { background: rgba(0,0,0,0.08); }
+  .dictation-hint.dismissed { display: none; }
+  @media print { .dictation-hint { display: none; } }
+
+  /* PROGRESS BAR */
+  .progress-strip {
+    position: sticky; bottom: 60px; z-index: 38;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    padding: 8px 16px 6px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--muted);
+  }
+  .progress-strip .progress-label { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .progress-strip .bar {
+    flex: 1; height: 6px; background: var(--border); border-radius: 999px; overflow: hidden;
+  }
+  .progress-strip .bar .fill {
+    height: 100%; background: linear-gradient(90deg, var(--green) 0%, var(--green) 100%);
+    width: 0%; transition: width 0.3s ease;
+  }
+  @media print { .progress-strip { display: none; } }
+  @media (max-width: 600px) { .progress-strip { padding: 6px 12px; font-size: 11px; } }
+
+  /* TOAST */
+  .toast-host {
+    position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
+    z-index: 1100; display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none; padding: 0 12px; max-width: 90%;
+  }
+  .toast {
+    background: var(--navy); color: white;
+    padding: 11px 18px; border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    pointer-events: auto;
+    animation: toast-in .25s ease;
+    max-width: 480px;
+  }
+  .toast.success { background: var(--green); color: var(--navy); }
+  .toast.error { background: var(--red); }
+  @keyframes toast-in {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* DISCOVERY BANNER */
+  .discovery-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: linear-gradient(90deg, #fef9e0 0%, #fffefb 100%);
+    border: 1px solid #f0d870; border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+    font-size: 13px; color: #6b4e00; line-height: 1.45;
+    position: relative;
+  }
+  .discovery-banner .ico { font-size: 18px; flex-shrink: 0; }
+  .discovery-banner strong { color: var(--navy); font-weight: 700; }
+  .discovery-banner .dismiss {
+    margin-left: auto; background: none; border: none; color: #8a6e00;
+    cursor: pointer; font-size: 18px; padding: 2px 8px; line-height: 1;
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .discovery-banner .dismiss:hover { background: rgba(0,0,0,0.06); }
+  .discovery-banner.dismissed { display: none; }
+  @media print { .discovery-banner { display: none; } }
+
+  /* SECTION COMPLETION BADGES */
+  .section-badges { display: flex; gap: 6px; margin-left: 8px; flex-wrap: wrap; }
+  .section-badges .sbadge {
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+    color: white; border-radius: 999px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+    white-space: nowrap; line-height: 1.4;
+  }
+  .section-badges .sbadge.green { background: rgba(128,188,0,0.85); border-color: rgba(128,188,0,1); }
+  .section-badges .sbadge.yellow { background: rgba(246,212,77,0.92); border-color: rgba(201,168,0,1); color: #4a3700; }
+  .section-badges .sbadge.red { background: rgba(224,40,38,0.95); border-color: rgba(170,16,16,1); }
+  @media print { .section-badges { display: none; } }
+
+  /* SECTION TOGGLE */
+  .section-toggle { margin-left: auto; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.35); color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; font-family: inherit; letter-spacing: 0.3px; }
+  .section-toggle:hover { background: rgba(255,255,255,0.25); }
+  .section-toggle.hidden-state { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); opacity: 0.8; }
+  .card-body.collapsed { display: none; }
+  .not-in-scope { display: none; padding: 16px 20px; background: #f9f9fb; border-top: 1px solid var(--border); }
+  .not-in-scope.visible { display: flex; align-items: center; gap: 14px; }
+  .not-in-scope-icon { font-size: 22px; flex-shrink: 0; opacity: 0.5; }
+  .not-in-scope-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .not-in-scope-text strong { color: var(--navy); display: block; margin-bottom: 2px; font-size: 13px; }
+  .not-in-scope-text span { color: var(--green); font-weight: 600; }
+  @media print {
+    .section-toggle { display: none; }
+    .not-in-scope.visible { background: #f9f9fb; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #autosaveStatus { display: none; }
+  }
+
+  /* INTERNAL BADGE */
+  .internal-badge { display: inline-block; margin-left: 8px; background: #fde8e8; color: #aa1010; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 10px; letter-spacing: 0.5px; vertical-align: middle; border: 1px solid #f0aaaa; }
+  tr[data-internal="true"] { background: #fafafa; }
+  tr[data-internal="true"] td { color: #888; }
+  /* Make internal note fields visually obvious so techs do not type client-facing notes there. */
+  .internal-notes-field {
+    border-left: 4px solid var(--red);
+    background: #fff5f5;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
+  .internal-notes-field label { color: var(--navy); }
+  .internal-notes-field textarea { background: white; }
+
+  @media print {
+    body { background: white; }
+    .action-bar { display: none; }
+    .container { padding: 0; max-width: 100%; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .header, .card-header, .rag-btn, .health-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .add-row-btn, .wifi-row-delete, .mem-btn { display: none; }
+    /* HIDE INTERNAL ITEMS ON PRINT */
+    tr[data-internal="true"] { display: none; }
+    .internal-badge { display: none; }
+    .internal-notes-field { display: none; }
+    /* PRINT SUMMARY: hide screen elements, show print-only summary */
+    .health-dashboard { display: none; }
+    .health-note { display: none; }
+    #healthPositiveNote { display: none; }
+    #findingsList { display: none; }
+    .print-summary { display: block !important; }
+    .print-summary .health-dashboard { display: grid !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 14px; }
+    .section-toggle { display: none; }
+    .rag-btn:not(.active) { opacity: 0.25; }
+  }
+  @media (max-width: 600px) {
+    .header { padding: 16px; flex-wrap: wrap; }
+    .header-right { margin-left: 0; width: 100%; text-align: left; margin-top: 8px; }
+    .form-row, .form-row.three { grid-template-columns: 1fr; }
+    .health-dashboard { grid-template-columns: repeat(2, 1fr); }
+    .action-bar { flex-wrap: wrap; }
+    .btn { width: 100%; }
+    .signoff-row { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- SPLASH SCREEN ---------- */
+  .splash-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background:
+      radial-gradient(ellipse at top left, rgba(246,212,77,0.10), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(224,40,38,0.05), transparent 60%),
+      linear-gradient(135deg, #001E61 0%, #0A2D7A 60%, #001E61 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    animation: splash-fade-in 0.25s ease;
+  }
+  @keyframes splash-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .splash-card {
+    background: white; border-radius: 22px; padding: 36px 32px;
+    max-width: 560px; width: 100%;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 6px 18px rgba(0,30,97,0.18);
+    text-align: center;
+    animation: splash-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes splash-pop { from { transform: translateY(20px) scale(0.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+  .splash-mark {
+    width: 96px; height: 96px; margin: 0 auto 14px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 8px 24px rgba(0,30,97,0.18), 0 1px 3px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .splash-mark img { width: 84%; height: 84%; object-fit: contain; }
+  .splash-card .splash-eyebrow {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--yellow);
+    background: var(--navy); padding: 4px 12px; border-radius: 999px;
+    display: inline-block; margin-bottom: 14px;
+  }
+  .splash-card h1 {
+    font-size: 26px; font-weight: 800; color: var(--navy);
+    margin: 0 0 4px; letter-spacing: -0.01em;
+  }
+  .splash-card .splash-tagline {
+    font-size: 13px; color: var(--muted); margin: 0 0 6px;
+    font-weight: 500;
+  }
+  .splash-card .splash-date {
+    font-size: 12px; color: var(--muted); font-weight: 600;
+    margin-bottom: 22px; padding-top: 8px; border-top: 1px solid var(--border);
+  }
+  .splash-section { margin-bottom: 18px; text-align: left; }
+  .splash-section .splash-label {
+    display: block; font-size: 11px; font-weight: 800; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;
+  }
+  .splash-pickers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 8px;
+  }
+  .splash-pickers.market { grid-template-columns: 1fr 1fr; }
+  .splash-pickers .pk {
+    border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 12px 6px 10px; font-size: 14px; font-weight: 700; color: var(--text);
+    background: white; cursor: pointer; transition: all 0.15s ease;
+    text-align: center; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .splash-pickers .pk small {
+    display: block; font-size: 10px; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.04em; text-transform: none;
+  }
+  .splash-pickers .pk:hover { border-color: var(--navy); background: #f5f7fc; }
+  .splash-pickers .pk.selected {
+    border-color: var(--navy); background: var(--navy); color: white;
+    box-shadow: 0 4px 12px rgba(0,30,97,0.28);
+  }
+  .splash-pickers .pk.selected small { color: rgba(255,255,255,0.78); }
+  .splash-cta {
+    background: var(--navy); color: white; border: none;
+    padding: 14px 20px; border-radius: 12px; font-size: 15px; font-weight: 700;
+    width: 100%; cursor: pointer; font-family: inherit; margin-top: 14px;
+    transition: background 0.15s ease, transform 0.1s ease;
+    letter-spacing: 0.01em;
+  }
+  .splash-cta:hover:not(:disabled) { background: #0A2D7A; }
+  .splash-cta:active:not(:disabled) { transform: scale(0.98); }
+  .splash-cta:disabled { background: #b8c1d3; cursor: not-allowed; }
+  .splash-foot {
+    margin-top: 14px; font-size: 11px; color: var(--muted);
+    line-height: 1.5;
+  }
+  .splash-foot strong { color: var(--navy); }
+
+  /* ---------- RECOMMENDATIONS ---------- */
+  .rec-block { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .rec-block-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .rec-block-head .sub-header { margin: 0; }
+  .rec-block-head .rec-help {
+    font-size: 11px; color: var(--muted); font-weight: 500;
+  }
+  .rec-list { display: flex; flex-direction: column; gap: 8px; }
+  .rec-row {
+    display: grid; grid-template-columns: 1fr 1fr 2fr auto;
+    gap: 8px; align-items: center;
+    background: #fafbfd; border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px;
+  }
+  .rec-row input {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 9px; font-size: 13px; font-family: inherit;
+    background: white; min-width: 0;
+  }
+  .rec-row input:focus { outline: none; border-color: var(--navy); }
+  .rec-row .rec-delete {
+    background: none; border: none; color: #ccc; cursor: pointer;
+    font-size: 14px; padding: 6px 8px; border-radius: 4px;
+  }
+  .rec-row .rec-delete:hover { color: var(--red); }
+  .rec-add-btn {
+    background: none; border: 1.5px dashed var(--border); color: var(--navy);
+    padding: 8px 14px; border-radius: 7px; cursor: pointer;
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    width: 100%; margin-top: 8px;
+  }
+  .rec-add-btn:hover { border-color: var(--navy); background: #f0f3fa; }
+  @media (max-width: 600px) {
+    .rec-row { grid-template-columns: 1fr 1fr auto; }
+    .rec-row input.rec-note { grid-column: 1 / -1; }
+  }
+
+  /* ---------- PER-SECTION PHOTOS ---------- */
+  .section-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px; margin-top: 10px;
+  }
+  .section-photo-tile {
+    aspect-ratio: 1/1; border-radius: 10px; overflow: hidden;
+    background: #fafbfd; border: 1.5px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; cursor: pointer; color: var(--muted);
+  }
+  .section-photo-tile.has-photo { border: 1px solid var(--border); }
+  .section-photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .section-photo-tile .add-icon {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--muted); font-weight: 600;
+  }
+  .section-photo-tile .add-icon .ico { font-size: 22px; }
+  .section-photo-tile .photo-label {
+    position: absolute; bottom: 4px; left: 4px; right: 4px;
+    font-size: 10px; font-weight: 600; padding: 2px 6px;
+    background: rgba(0,0,0,0.65); color: white; border-radius: 5px;
+    text-align: center; pointer-events: none;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .section-photo-tile .photo-remove {
+    position: absolute; top: 4px; right: 4px; width: 22px; height: 22px;
+    border-radius: 50%; background: rgba(0,0,0,0.7); color: white;
+    border: none; cursor: pointer; font-size: 12px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .section-photo-help { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ---------- FIELD-DISCOVERY-STYLE PRINT OUTPUT ---------- */
+  .field-print { display: none; }
+  @media print {
+    /* PRINT PAGE FRAME */
+    @page {
+      size: letter;
+      margin: 0.55in 0.55in 0.7in 0.55in;
+    }
+    .splash-overlay { display: none !important; }
+    .header { display: none !important; }
+    .field-print { display: block !important; }
+    .container > .card { display: none !important; }
+    .container > .field-print { display: block !important; }
+
+    /* TYPOGRAPHY */
+    .field-print { color: #1a1a1a; font-family: "Segoe UI", -apple-system, Helvetica, Arial, sans-serif; }
+    .field-print h1 { font-size: 22px; color: var(--navy); margin: 0; letter-spacing: -0.01em; }
+    .field-print h2 { font-size: 13px; color: var(--navy); margin: 0; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; }
+    .field-print h3 { font-size: 12px; color: var(--navy); margin: 10px 0 4px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .field-print p { font-size: 12px; line-height: 1.5; color: #1a1a1a; margin: 0 0 6px; }
+    .field-print ul { margin: 0 0 8px 0; padding: 0; list-style: none; }
+    .field-print li { font-size: 12px; line-height: 1.45; color: #1a1a1a; margin-bottom: 3px; }
+
+    /* LETTERHEAD */
+    .field-print .letterhead {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; margin-bottom: 16px;
+      background: linear-gradient(135deg, #001E61 0%, #0A2D7A 100%);
+      color: white; border-radius: 10px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      page-break-inside: avoid;
+    }
+    .field-print .letterhead .titles { flex: 1; }
+    .field-print .letterhead .titles .brand-eyebrow {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.18em;
+      color: var(--yellow); text-transform: uppercase; margin-bottom: 2px;
+    }
+    .field-print .letterhead .titles h1 {
+      color: white; font-size: 20px; font-weight: 800; margin: 0;
+    }
+    .field-print .letterhead .titles .client {
+      font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500;
+      margin-top: 2px;
+    }
+    .field-print .letterhead .meta {
+      text-align: right; font-size: 10px; line-height: 1.55;
+      color: rgba(255,255,255,0.92);
+    }
+    .field-print .letterhead .meta strong { color: white; }
+
+    /* PROJECT DETAILS CARD */
+    .field-print .details-card {
+      display: grid; grid-template-columns: 2fr 1fr;
+      gap: 0; border: 1px solid #e5e8ee; border-radius: 10px;
+      margin-bottom: 14px; overflow: hidden;
+      page-break-inside: avoid;
+    }
+    .field-print .details-card .details {
+      padding: 12px 14px; background: white;
+    }
+    .field-print .details-card .details-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+    .field-print .details-card .row .label {
+      font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .field-print .details-card .row .value {
+      font-size: 12px; font-weight: 600; color: #1a1a1a; margin-top: 1px;
+    }
+    .field-print .details-card .tier-side {
+      padding: 12px 14px; background: #fafbfd;
+      border-left: 1px solid #e5e8ee;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .details-card .tier-eyebrow {
+      font-size: 9px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px;
+    }
+    .field-print .details-card .tier-pill {
+      display: inline-block; padding: 6px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 800; letter-spacing: 0.02em;
+      background: var(--navy); color: white;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .details-card .tier-pill.member { background: var(--green); color: var(--navy); }
+    .field-print .details-card .tier-pill.standard { background: #fef9e0; color: #8a6e00; border: 1px solid #f0d870; }
+    .field-print .details-card .tier-note {
+      font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.4;
+    }
+
+    /* SECTION HEAD WITH ACCENT BAND */
+    .field-print .section-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; margin: 18px 0 10px;
+      background: linear-gradient(90deg, var(--navy) 0%, #0A2D7A 100%);
+      color: white; border-radius: 8px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      page-break-after: avoid;
+    }
+    .field-print .section-head .icon {
+      font-size: 14px; width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .section-head h2 { color: white; flex: 1; }
+    .field-print .section-head .accent {
+      width: 4px; height: 20px; background: var(--yellow); border-radius: 2px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+
+    /* SYSTEM HEALTH KPI DASHBOARD */
+    .field-print .kpi-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      margin: 4px 0 10px;
+      page-break-inside: avoid;
+    }
+    .field-print .kpi {
+      border: 1.5px solid; border-radius: 10px;
+      padding: 10px 12px;
+      display: flex; flex-direction: column; gap: 2px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .kpi .num { font-size: 22px; font-weight: 800; line-height: 1; }
+    .field-print .kpi .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .field-print .kpi.green { background: #f0f8e0; border-color: #b3d97a; color: #2d5a00; }
+    .field-print .kpi.yellow { background: #fef9e0; border-color: #f0d870; color: #8a6e00; }
+    .field-print .kpi.red { background: #fde8e8; border-color: #f0aaaa; color: #aa1010; }
+
+    /* FINDING CARDS */
+    .field-print .findings-list { display: flex; flex-direction: column; gap: 5px; }
+    .field-print .finding {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid #e5e8ee; border-radius: 8px;
+      background: #fafbfd;
+      border-left-width: 3px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      page-break-inside: avoid;
+    }
+    .field-print .finding.red { border-left-color: var(--red); background: #fdf5f5; }
+    .field-print .finding.yellow { border-left-color: var(--yellow); background: #fefbf0; }
+    .field-print .finding .status {
+      flex-shrink: 0; font-size: 9px; font-weight: 800;
+      padding: 2px 7px; border-radius: 999px;
+      letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      align-self: flex-start; margin-top: 1px;
+    }
+    .field-print .finding.red .status { background: var(--red); color: white; }
+    .field-print .finding.yellow .status { background: var(--yellow); color: #4a3700; }
+    .field-print .finding .text { font-size: 12px; line-height: 1.4; flex: 1; }
+
+    /* NOTES CALLOUT */
+    .field-print .notes-callout {
+      background: white; border: 1px solid #e5e8ee;
+      border-left: 3px solid var(--navy);
+      border-radius: 6px; padding: 8px 12px;
+      font-size: 12px; line-height: 1.5; color: #1a1a1a;
+      margin-bottom: 8px;
+      page-break-inside: avoid;
+    }
+    .field-print .notes-callout .label {
+      font-size: 9px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.08em; font-weight: 700; margin-bottom: 3px;
+    }
+
+    /* WIFI TABLE */
+    .field-print .wifi-print { width: 100%; border-collapse: collapse; margin: 4px 0 10px; }
+    .field-print .wifi-print th {
+      background: var(--navy); color: white; padding: 7px 10px;
+      font-size: 10px; text-align: left; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .wifi-print th.center { text-align: center; }
+    .field-print .wifi-print td { padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #eee; }
+    .field-print .wifi-print td.center { text-align: center; }
+    .field-print .wifi-print td.speed { font-weight: 700; color: var(--navy); }
+    .field-print .wifi-print td.signal {
+      font-weight: 800; font-size: 10px; letter-spacing: 0.06em;
+      text-transform: uppercase; color: white; text-align: center;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .wifi-print td.signal.green { background: #4a7a00; }
+    .field-print .wifi-print td.signal.yellow { background: #c9a800; }
+    .field-print .wifi-print td.signal.red { background: var(--red); }
+
+    /* POLAROID PHOTOS */
+    .field-print .photo-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      margin: 6px 0 12px;
+    }
+    .field-print .photo-card {
+      background: white; border: 1px solid #e5e8ee; border-radius: 6px;
+      padding: 5px 5px 0; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      page-break-inside: avoid;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .field-print .photo-card .img-wrap {
+      aspect-ratio: 4/3; overflow: hidden; border-radius: 4px; background: #fafbfd;
+    }
+    .field-print .photo-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .field-print .photo-card .caption {
+      font-size: 9px; color: #1a1a1a; padding: 4px 2px 5px;
+      text-align: center; font-weight: 600;
+    }
+
+    /* RECOMMENDATIONS CALLOUT */
+    .field-print .recs-callout {
+      background: linear-gradient(135deg, #fef9e0 0%, #fffefb 100%);
+      border: 1px solid #f0d870; border-left: 4px solid var(--yellow);
+      border-radius: 10px; padding: 10px 14px;
+      margin: 6px 0 12px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      page-break-inside: avoid;
+    }
+    .field-print .recs-callout h3 { color: #6b4e00; margin: 0 0 6px; }
+    .field-print .recs-callout p { color: #2a2a2a; font-size: 12px; }
+
+    /* QUOTE FRAMING (Standard tier service items) */
+    .field-print .quote-framing {
+      background: #fdf5f5; border: 1px solid #f0aaaa; border-left: 4px solid var(--red);
+      border-radius: 10px; padding: 10px 14px; margin: 10px 0;
+      font-size: 11px; line-height: 1.5; color: #4a1010;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      page-break-inside: avoid;
+    }
+    .field-print .quote-framing strong { color: var(--navy); }
+    .field-print .quote-framing .qf-eyebrow {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 4px;
+    }
+
+    /* SIGN-OFF */
+    .field-print .signoff {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin-top: 18px; padding: 14px;
+      border-top: 2px solid var(--yellow);
+      page-break-inside: avoid;
+    }
+    .field-print .signoff .so-block .label {
+      font-size: 9px; color: #888; text-transform: uppercase;
+      letter-spacing: 0.08em; font-weight: 700; margin-bottom: 2px;
+    }
+    .field-print .signoff .so-block .value {
+      font-size: 13px; font-weight: 700; color: var(--navy);
+      border-bottom: 1px solid var(--border); padding-bottom: 4px;
+    }
+
+    /* FOOTER */
+    .field-print .footer {
+      margin-top: 20px; padding-top: 10px;
+      border-top: 1px solid #e5e8ee;
+      font-size: 9px; color: #888; text-align: center;
+      letter-spacing: 0.04em;
+    }
+    .field-print .footer strong { color: var(--navy); }
+
+    .field-print .field-section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img id="captivateLogo" alt="Captivate" src="logo.png" alt="Captivate Logo">
+  <div class="header-text">
+    <h1>Captivate Field Tune Up</h1>
+    <p>Elevated Home Technology &nbsp;|&nbsp; Field System Health Assessment</p>
+  </div>
+  <div class="header-right">
+    <span id="headerTechMarket" style="font-weight:600;font-size:13px;">--</span><br>
+    Captivate &nbsp;|&nbsp; captivatetx.com
+  </div>
+</div>
+
+<span id="membershipBadgeDisplay" style="display:none;">Select Below</span>
+
+<!-- SPLASH SCREEN: locks in tech and market before the form opens -->
+<div class="splash-overlay" id="splashOverlay" role="dialog" aria-label="Field Tune Up Login">
+  <div class="splash-card">
+    <div class="splash-mark"><img id="splashLogo" alt="Captivate"></div>
+    <span class="splash-eyebrow">Captivate &middot; Field Visit</span>
+    <h1>Field Tune Up</h1>
+    <p class="splash-tagline">Elevated Home Technology &nbsp;|&nbsp; System Health Assessment</p>
+    <div class="splash-date" id="splashDate">--</div>
+
+    <div class="splash-section">
+      <span class="splash-label">Lead Technician</span>
+      <div class="splash-pickers" id="splashTechPickers">
+        <button type="button" class="pk" data-splash-tech="Ben">Ben<small>Service Tech</small></button>
+        <button type="button" class="pk" data-splash-tech="Juan">Juan<small>Service Tech</small></button>
+        <button type="button" class="pk" data-splash-tech="Patrick">Patrick<small>Service Tech</small></button>
+        <button type="button" class="pk" data-splash-tech="Nick">Nick<small>Service Tech</small></button>
+        <button type="button" class="pk" data-splash-tech="Ricardo">Ricardo<small>Service Tech</small></button>
+      </div>
+    </div>
+
+    <div class="splash-section">
+      <span class="splash-label">Market</span>
+      <div class="splash-pickers market" id="splashMarketPickers">
+        <button type="button" class="pk" data-splash-market="Austin">Austin<small>Captivate Austin</small></button>
+        <button type="button" class="pk" data-splash-market="Boerne">Boerne<small>Captivate Boerne</small></button>
+      </div>
+    </div>
+
+    <div id="splashHelperHint" style="display:none;background:#fef9e0;border:1px solid #f0d870;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#6b4e00;text-align:left;">
+      <strong>Current lead tech:</strong> <span class="lead-name"></span>.
+      The picked tech will be added as Helper.
+      <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:600;color:var(--navy);cursor:pointer;">
+        <input type="checkbox" id="splashReplaceLead" onchange="splashState.replaceLead = this.checked;">
+        Replace lead tech instead
+      </label>
+    </div>
+
+    <button type="button" class="splash-cta" id="splashContinue" disabled onclick="closeSplash()">Start Tune Up</button>
+
+    <div class="splash-foot">
+      <strong>Tip:</strong> Confirm cabling availability behind TVs and inside cabinets, and verify the OvrC Hub at any networked site.
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="discovery-banner" id="discoveryBanner">
+    <span class="ico">&#128270;</span>
+    <div>
+      <strong>Discovery checklist:</strong> Confirm cabling availability (Cat5/6, fiber, coax) behind TVs, inside cabinets, and near equipment. Verify OvrC Hub presence at any networked site. Sony, Crestron, IC Realtime, McIntosh, Sonos, Sonance, B&amp;W are preferred brands.
+    </div>
+    <button type="button" class="dismiss" onclick="dismissDiscoveryBanner()" aria-label="Dismiss reminder" title="Hide reminder">&#10005;</button>
+  </div>
+
+  <div class="dictation-hint" id="dictationHint">
+    <span class="ico">&#127908;</span>
+    <div>Tap any notes field, then tap the <strong>microphone</strong> on the iPad keyboard to dictate instead of typing.</div>
+    <button type="button" class="dismiss" onclick="dismissDictationHint()" aria-label="Got it" title="Got it">&#10005;</button>
+  </div>
+
+  <nav class="section-nav" id="sectionNav" aria-label="Jump to section">
+    <a class="navchip" href="#anchor-project">Project</a>
+    <a class="navchip" href="#anchor-health">Health</a>
+    <a class="navchip" href="#anchor-network">Network</a>
+    <a class="navchip" href="#anchor-audio-video">AV</a>
+    <a class="navchip" href="#anchor-control-systems">Control</a>
+    <a class="navchip" href="#anchor-lighting-controls">Lighting</a>
+    <a class="navchip" href="#anchor-shading">Shading</a>
+    <a class="navchip" href="#anchor-security-cameras">Security</a>
+    <a class="navchip" href="#anchor-alarm-system">Alarm</a>
+    <a class="navchip" href="#anchor-docfunc">Docs/Func</a>
+    <a class="navchip" href="#anchor-photos">Photos</a>
+    <a class="navchip" href="#anchor-signoff">Sign-Off</a>
+  </nav>
+
+  <!-- PROJECT INFORMATION -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">📋</span><h2>Project Information</h2></div>
+    <div class="card-body">
+      <div class="form-row single">
+        <div class="form-group"><label>Client / Project Name</label><input type="text" id="clientName" placeholder="e.g. Smith, John and Jane Residence"></div>
+      </div>
+      <div class="form-row three">
+        <div class="form-group"><label>Lead Technician</label>
+          <select id="techName" onchange="onTechMarketChange()">
+            <option value="">-- Select --</option>
+            <option value="Ben">Ben</option>
+            <option value="Juan">Juan</option>
+            <option value="Patrick">Patrick</option>
+            <option value="Nick">Nick</option>
+            <option value="Ricardo">Ricardo</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Helper Technician <span style="font-weight:400;text-transform:none;font-size:11px;">(if applicable)</span></label>
+          <select id="techName2" onchange="onTechMarketChange()">
+            <option value="">-- None --</option>
+            <option value="Ben">Ben</option>
+            <option value="Juan">Juan</option>
+            <option value="Patrick">Patrick</option>
+            <option value="Nick">Nick</option>
+            <option value="Ricardo">Ricardo</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Market</label>
+          <select id="market" onchange="onTechMarketChange()">
+            <option value="">-- Select --</option>
+            <option value="Austin">Austin</option>
+            <option value="Boerne">Boerne</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><label>Send Report To (CSM)</label>
+          <select id="csmName" onchange="onTechMarketChange()">
+            <option value="">-- Select --</option>
+            <option value="Quinn">Quinn (Austin)</option>
+            <option value="Martin">Martin (Boerne)</option>
+          </select>
+          <span style="font-size:11px;color:var(--muted);margin-top:4px;">Auto-selects from Market. Override if this report is going to a different CSM.</span>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><label>Site Address</label><input type="text" id="address1" placeholder="Street address"></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><label>Address Line 2 (Apt, Unit, Suite)</label><input type="text" id="address2" placeholder="Apt / Unit / Suite (if applicable)"></div>
+      </div>
+      <div class="form-row three">
+        <div class="form-group"><label>City</label><input type="text" id="city" placeholder="City"></div>
+        <div class="form-group"><label>State</label><input type="text" id="state" placeholder="TX" value="TX"></div>
+        <div class="form-group"><label>Zip</label><input type="text" id="zip" placeholder="Zip Code"></div>
+      </div>
+      <div class="form-row three">
+        <div class="form-group"><label>Date of Tune Up</label><input type="date" id="tuneupDate" onchange="updateNextTuneupDate()"></div>
+        <div class="form-group"><label>Date of Previous Tune Up</label><input type="date" id="prevTuneupDate"></div>
+        <div class="form-group"><label>Next Recommended Tune Up</label><input type="date" id="nextTuneupDate" readonly style="background:#f0f7e6;color:var(--navy);font-weight:600;cursor:default;" title="Auto-set to 6 months from tune up date"></div>
+      </div>
+      <hr class="divider">
+      <div class="form-group">
+        <label>Membership Tier</label>
+        <div class="membership-selector">
+          <button class="mem-btn" onclick="setMembership(this,'Standard')">Standard</button>
+          <button class="mem-btn" onclick="setMembership(this,'Essentials+')">Essentials+</button>
+          <button class="mem-btn" onclick="setMembership(this,'Priority')">Priority</button>
+          <button class="mem-btn" onclick="setMembership(this,'Proactive')">Proactive</button>
+          <button class="mem-btn" onclick="setMembership(this,'Signature')">Signature</button>
+        </div>
+        <div id="membershipStatus" style="margin-top:8px;padding:9px 13px;border-radius:7px;font-size:13px;font-weight:600;display:none;line-height:1.5;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM HEALTH DASHBOARD -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">🏥</span><h2>System Health Summary</h2></div>
+    <div class="card-body">
+      <div class="health-dashboard">
+        <div class="health-card green"><div class="count" id="greenCount">--</div><div class="hlabel">Verified</div></div>
+        <div class="health-card yellow"><div class="count" id="yellowCount">--</div><div class="hlabel">Needs Attention</div></div>
+        <div class="health-card red"><div class="count" id="redCount">--</div><div class="hlabel">Requires Service</div></div>
+        <div class="health-card na"><div class="count" id="naCount">--</div><div class="hlabel">Not Applicable</div></div>
+      </div>
+      <div class="health-note">Summary auto-updates as you complete the checklist.</div>
+      <div id="healthPositiveNote" style="display:none;margin-top:10px;padding:10px 13px;background:#e8f5d0;border-radius:7px;border-left:4px solid var(--green);font-size:13px;"></div>
+      <div style="margin-top:14px;padding:12px 14px;background:var(--light-gray);border-radius:10px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;">
+        <div class="form-group" style="flex:0 0 auto;min-width:200px;">
+          <label style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;">Last Router Reboot (check OvrC)</label>
+          <input type="date" id="lastRouterReboot" onchange="updateUptimeDisplay()" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:14px;font-family:inherit;margin-top:4px;">
+        </div>
+        <div id="uptimeDisplay" style="font-size:14px;padding-bottom:6px;flex:1;"></div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="sub-header">Key Findings &amp; Client Notes</div>
+        <div id="findingsList"><div class="empty-findings">No issues flagged yet. Red and Yellow items will appear here as you complete the checklist.</div></div>
+        <div class="print-summary" id="printSummary"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NETWORK -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#127760;</span><h2>Network</h2><button class="section-toggle" onclick="toggleSection(this, 'network')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-network">
+      <div class="sub-header">WiFi Speed Tests</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Label each location exactly as it is named in the home. Test from the same spot every visit to track speed trends over time.</p>
+      <table class="wifi-table">
+        <thead>
+          <tr>
+            <th style="width:36%">Location / Room Label</th>
+            <th style="width:20%">Download (Mbps)</th>
+            <th style="width:20%">Upload (Mbps)</th>
+            <th style="width:16%">Signal Status</th>
+            <th style="width:8%"></th>
+          </tr>
+        </thead>
+        <tbody id="wifiBody">
+          <tr>
+            <td><input type="text" placeholder="e.g. Living Room, Master Suite"></td>
+            <td><input type="number" placeholder="0" min="0" oninput="onWifiSpeedChange(this)"></td>
+            <td><input type="number" placeholder="0" min="0"></td>
+            <td><div class="rag-selector"><button class="rag-btn green" title="Strong Signal" aria-label="Strong WiFi Signal" onclick="toggleRag(this)"></button><button class="rag-btn yellow" title="Weak Signal" aria-label="Weak WiFi Signal" onclick="toggleRag(this)"></button><button class="rag-btn red" title="No Signal" aria-label="No WiFi Signal" onclick="toggleRag(this)"></button></div></td>
+            <td><button class="wifi-row-delete" onclick="deleteWifiRow(this)" aria-label="Remove row">&#10005;</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:var(--muted);margin-top:4px;">Signal auto-suggests on download speed entry. Override with a tap if needed. Thresholds: green &ge; 500, yellow 100&ndash;499, red &lt; 100 Mbps.</p>
+      <button class="add-row-btn" onclick="addWifiRow()">+ Add Location</button>
+      <div class="updates-field internal-notes-field" style="margin-top:18px;" data-internal="true"><label>Network -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="networkUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <hr class="divider">
+      <div class="rag-legend">
+        <strong style="font-size:11px;color:var(--navy)">STATUS:</strong>
+        <span><span class="rag-dot green"></span> Verified</span>
+        <span><span class="rag-dot yellow"></span> Needs Attention</span>
+        <span><span class="rag-dot red"></span> Requires Service</span>
+        <span><span class="rag-dot na"></span> N/A</span>
+      </div>
+      <table class="checklist" id="networkChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="networkNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and network observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-network">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No Network infrastructure in this home managed by Captivate. <span>Captivate provides this service</span> -- We design and install fully managed networks for every home.
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO / VIDEO -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128250;</span><h2>Audio / Video</h2><button class="section-toggle" onclick="toggleSection(this, 'audio-video')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-audio-video">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>AV -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="avUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="avChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="avNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and AV observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-audio-video">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No Audio/Video system in this home installed by Captivate. <span>Captivate provides this service</span> -- We design and install whole-home AV experiences tailored to how you live.
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROL SYSTEMS -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#9881;</span><h2>Control Systems</h2><button class="section-toggle" onclick="toggleSection(this, 'control-systems')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-control-systems">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Control Systems -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="csUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="csChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="csNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and control system observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-control-systems">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No Control System in this home installed by Captivate. <span>Captivate provides this service</span> -- We integrate Crestron, Lutron, and leading platforms for seamless automation.
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTING -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128161;</span><h2>Lighting Controls</h2><button class="section-toggle" onclick="toggleSection(this, 'lighting-controls')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-lighting-controls">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Lighting -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="lightingUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="lightingChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="lightingNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and lighting observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-lighting-controls">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No Lighting Control system or fixtures in this home provided by Captivate. <span>Captivate provides this service</span> -- We design and install smart lighting including fixtures, personalized scenes, and keypads.
+      </div>
+    </div>
+  </div>
+
+  <!-- SHADING -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#129695;</span><h2>Shading</h2><button class="section-toggle" onclick="toggleSection(this, 'shading')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-shading">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Shading -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="shadingUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="shadingChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="shadingNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and shading observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-shading">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No shading in this home installed by Captivate. <span>Captivate provides this service</span> -- We offer both manual and motorized window treatments. Motorized shades can integrate with your lighting and control systems, but automation is not required -- we can outfit any window with the right solution.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128274;</span><h2>Security / Cameras</h2><button class="section-toggle" onclick="toggleSection(this, 'security-cameras')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-security-cameras">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Security Cameras -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="securityUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="securityChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="securityNotesClient" oninput="updateHealthSummary()" placeholder="Positive highlights and camera system observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-security-cameras">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>Not in scope for this project</strong>
+        No Security or Camera system in this home installed by Captivate. <span>Captivate provides this service</span> -- We provide full camera and security solutions -- ask us about protecting your home.
+      </div>
+    </div>
+  </div>
+
+  <!-- ALARM SYSTEM -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128680;</span><h2>Alarm System</h2><button class="section-toggle" onclick="toggleSection(this, 'alarm-system')" title="Hide this section if not applicable">&#8226; In Scope</button></div>
+    <div class="card-body" id="body-alarm-system">
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Alarm System -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="alarmUpdates" placeholder="List items needing follow-up, service quotes, or client approval..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span></div>
+      <table class="checklist" id="alarmChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="alarmNotesClient" oninput="updateHealthSummary()" placeholder="Alarm system highlights and observations to share with the client..."></textarea></div>
+    </div>
+    <div class="not-in-scope" id="scope-alarm-system">
+      <div class="not-in-scope-icon">&#128683;</div>
+      <div class="not-in-scope-text">
+        <strong>No alarm system in scope</strong>
+        No alarm system installed or monitored by Captivate in this home. <span>Captivate provides this service</span> -- We offer complete residential alarm solutions including door/window contacts, motion sensors, glass break detection, smoke and CO monitoring, and 24/7 UL-certified central station monitoring through alarm.com. Ask us about a no-cost security assessment for this home.
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTATION & FUNCTIONALITY -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128193;</span><h2>Documentation &amp; Functionality</h2></div>
+    <div class="card-body">
+      <div class="sub-header" style="margin-bottom:12px;">Documentation</div>
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Documentation -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="docUpdates" placeholder="Documentation gaps, missing labels, password updates needed, etc..."></textarea></div>
+      <div class="rag-legend"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span><button type="button" class="mark-na-btn" onclick="markAllNA('docChecklist')" title="Set every untouched row to N/A">Mark all N/A</button></div>
+      <table class="checklist" id="docChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="docNotesClient" oninput="updateHealthSummary()" placeholder="Documentation updates or highlights to communicate to the client..."></textarea></div>
+      <hr class="divider">
+      <div class="sub-header" style="margin-bottom:12px;">Functional Testing</div>
+      <div class="updates-field internal-notes-field" data-internal="true"><label>Functional Testing -- Action Items / Service Needs <span class="internal-badge">INTERNAL</span></label><textarea id="funcUpdates" placeholder="Items that failed testing, follow-up needed, technical issues to track..."></textarea></div>
+      <div class="rag-legend" style="margin-top:10px;"><strong style="font-size:11px;color:var(--navy)">STATUS:</strong><span><span class="rag-dot green"></span> Verified</span><span><span class="rag-dot yellow"></span> Needs Attention</span><span><span class="rag-dot red"></span> Requires Service</span><span><span class="rag-dot na"></span> N/A</span><button type="button" class="mark-na-btn" onclick="markAllNA('funcChecklist')" title="Set every untouched row to N/A">Mark all N/A</button></div>
+      <table class="checklist" id="funcChecklist"><thead><tr><th class="left" style="width:65%">Item</th><th style="width:35%">Status</th></tr></thead><tbody></tbody></table>
+      <div class="notes-section"><label>Notes for Client Report</label><textarea id="funcNotesClient" oninput="updateHealthSummary()" placeholder="System reliability and functional highlights to share with the client..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- PHOTOS & DOCUMENTATION -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#128247;</span><h2>Photos &amp; Documentation</h2></div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Tap a tile to add a photo and label it. Photos persist on this device across reloads and appear in the printed report.</p>
+      <div class="section-photo-grid" id="globalPhotoGrid"></div>
+    </div>
+  </div>
+
+  <!-- SIGN-OFF -->
+  <div class="card">
+    <div class="card-header"><span class="section-icon">&#9989;</span><h2>Tech Sign-Off &amp; Recommendations</h2></div>
+    <div class="card-body">
+      <div class="notes-section">
+        <label>Overall Recommendations for Client</label>
+        <textarea id="recommendations" placeholder="Summarize what was completed, what needs to be addressed, and recommended next steps..." style="min-height:100px;"></textarea>
+      </div>
+      <hr class="divider">
+      <div class="signoff-row">
+        <div class="form-group"><label>Technician Name</label>
+          <select id="signoffTech">
+            <option value="">-- Select --</option>
+            <option value="Ben">Ben</option>
+            <option value="Juan">Juan</option>
+            <option value="Patrick">Patrick</option>
+            <option value="Nick">Nick</option>
+            <option value="Ricardo">Ricardo</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Date Completed</label><input type="date" id="signoffDate"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+
+  <!-- FIELD-DISCOVERY-STYLE PRINT OUTPUT (only visible on print) -->
+  <div class="field-print" id="fieldPrint"></div>
+</div>
+
+<div class="progress-strip" id="progressStrip" style="display:none;">
+  <span class="progress-label" id="progressLabel">0 / 9 sections</span>
+  <div class="bar"><div class="fill" id="progressFill"></div></div>
+</div>
+
+<div class="action-bar">
+  <span id="autosaveStatus" style="font-size:11px;color:var(--muted);margin-right:auto;align-self:center;">Draft autosaves on this device</span>
+  <div class="recent-wrap">
+    <button class="btn btn-secondary" id="recentBtn" style="display:none;" onclick="toggleRecentPanel()" title="Recent visits filed on this device">&#128340; Recent</button>
+    <div class="recent-panel" id="recentPanel"></div>
+  </div>
+  <button class="btn btn-secondary" onclick="reopenSplash()" title="Switch to a different tech without losing progress">&#128100; Switch Tech</button>
+  <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+  <button class="btn btn-primary" id="emailCsmAfterPdfBtn" style="display:none;" onclick="emailCsmAfterPdf()" title="After saving the PDF, tap here to open Mail">&#9993; Email CSM</button>
+  <div class="finish-menu">
+    <button class="btn btn-success" id="finishMenuBtn" onclick="toggleFinishMenu()" aria-haspopup="true" aria-expanded="false">Finish Visit &#9662;</button>
+    <div class="finish-menu-list" id="finishMenuList">
+      <button type="button" onclick="closeFinishMenu(); buildFieldPrint(); logPrintVisit(); window.print()">&#128190; Print or Save PDF</button>
+      <button type="button" onclick="closeFinishMenu(); exportPdfAndEmail()">&#128190; PDF + Email CSM (2-step)</button>
+      <button type="button" onclick="closeFinishMenu(); exportEmail()">&#9993; Email CSM (no attachment)</button>
+      <button type="button" onclick="closeFinishMenu(); sendToSlack()">&#128228; Send to Slack channel</button>
+      <button type="button" onclick="closeFinishMenu(); exportSummary()">&#128172; Copy Slack text to clipboard</button>
+      <button type="button" onclick="closeFinishMenu(); exportNextTuneUpIcs()">&#128197; Download Next Tune Up (.ics)</button>
+      <button type="button" onclick="closeFinishMenu(); resetSlackWebhook()" style="font-size:12px;color:var(--muted);">Reset Slack webhook URL</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return "";
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// ---------- RECENT VISITS LOG ----------
+// A small log of completed visits stored separately from the draft, so the
+// tech can see at a glance what they have already filed today.
+var RECENT_KEY = "captivate-field-recent-visits-v1";
+function loadRecent() {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch (e) { return []; }
+}
+function logCurrentVisit(action) {
+  var client = (document.getElementById("clientName") || {}).value || "";
+  if (!client.trim()) return; // skip empty
+  var tech = (document.getElementById("techName") || {}).value || "";
+  var csm = (document.getElementById("csmName") || {}).value || "";
+  var date = new Date().toISOString();
+  var entry = { client: client.trim(), tech: tech, csm: csm, date: date, action: action || "exported" };
+  var list = loadRecent();
+  list.unshift(entry);
+  if (list.length > 10) list = list.slice(0, 10);
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch (e) {}
+  renderRecentPanel();
+}
+function renderRecentPanel() {
+  var host = document.getElementById("recentPanel");
+  if (!host) return;
+  var list = loadRecent();
+  if (!list.length) {
+    host.innerHTML = "";
+    var trigger = document.getElementById("recentBtn");
+    if (trigger) trigger.style.display = "none";
+    return;
+  }
+  var trigger = document.getElementById("recentBtn");
+  if (trigger) {
+    trigger.style.display = "inline-flex";
+    trigger.textContent = "Recent (" + Math.min(list.length, 3) + ")";
+  }
+  var html = '<div class="recent-list">';
+  list.slice(0, 3).forEach(function(r) {
+    var when = new Date(r.date);
+    var ago = friendlyAgo(when);
+    html += '<div class="recent-item"><div><strong>' + escapeHtml(r.client) + '</strong>';
+    var meta = [r.tech, r.csm].filter(Boolean).join(" → ");
+    if (meta) html += '<br><span style="font-size:11px;color:var(--muted);">' + escapeHtml(meta) + '</span>';
+    html += '</div><div style="font-size:11px;color:var(--muted);text-align:right;">' + escapeHtml(ago) + '</div></div>';
+  });
+  html += '</div>';
+  host.innerHTML = html;
+}
+function friendlyAgo(then) {
+  return friendlyAgoMs(Date.now() - then.getTime());
+}
+function friendlyAgoMs(ms) {
+  if (ms < 60000) return "just now";
+  var m = Math.floor(ms / 60000);
+  if (m < 60) return m + " min";
+  var h = Math.floor(m / 60);
+  if (h < 24) return h + " hours";
+  var d = Math.floor(h / 24);
+  if (d < 30) return d + " day" + (d === 1 ? "" : "s");
+  return Math.floor(d / 30) + " month" + (Math.floor(d / 30) === 1 ? "" : "s");
+}
+function toggleRecentPanel() {
+  var host = document.getElementById("recentPanel");
+  if (!host) return;
+  host.classList.toggle("visible");
+}
+
+// Anchor ids for the section nav. Each card gets an id matching the nav chips.
+function wireSectionAnchors() {
+  var bodies = {
+    "anchor-network": "body-network",
+    "anchor-audio-video": "body-audio-video",
+    "anchor-control-systems": "body-control-systems",
+    "anchor-lighting-controls": "body-lighting-controls",
+    "anchor-shading": "body-shading",
+    "anchor-security-cameras": "body-security-cameras",
+    "anchor-alarm-system": "body-alarm-system"
+  };
+  Object.keys(bodies).forEach(function(anchorId) {
+    var body = document.getElementById(bodies[anchorId]);
+    var card = body ? body.closest(".card") : null;
+    if (card && !card.id) card.id = anchorId;
+  });
+  // Cards without a card-body id: tag by position
+  var cards = document.querySelectorAll(".container > .card");
+  if (cards.length) {
+    // First card = Project Info; second = Health; then sections; then doc/func; then photos; then sign-off
+    var firstUnassigned = Array.from(cards).filter(function(c) { return !c.id; });
+    var labels = ["anchor-project", "anchor-health", "anchor-docfunc", "anchor-photos", "anchor-signoff"];
+    // Map by visual order: project (first), health (second), and last three are doc/func, photos, sign-off
+    if (firstUnassigned.length >= 1 && !firstUnassigned[0].id) firstUnassigned[0].id = "anchor-project";
+    if (firstUnassigned.length >= 2 && !firstUnassigned[1].id) firstUnassigned[1].id = "anchor-health";
+    if (firstUnassigned.length >= 3) firstUnassigned[firstUnassigned.length - 3].id = "anchor-docfunc";
+    if (firstUnassigned.length >= 2) firstUnassigned[firstUnassigned.length - 2].id = "anchor-photos";
+    if (firstUnassigned.length >= 1) firstUnassigned[firstUnassigned.length - 1].id = "anchor-signoff";
+  }
+  // Highlight active section as the user scrolls
+  if (!("IntersectionObserver" in window)) return;
+  var chips = document.querySelectorAll(".section-nav .navchip");
+  if (!chips.length) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(en) {
+      if (!en.isIntersecting) return;
+      var id = en.target.id;
+      chips.forEach(function(c) {
+        c.classList.toggle("active", c.getAttribute("href") === "#" + id);
+      });
+    });
+  }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
+  document.querySelectorAll(".container > .card[id]").forEach(function(c) { io.observe(c); });
+  // Smooth scroll for navchips, since iOS jumps without it
+  chips.forEach(function(c) {
+    c.addEventListener("click", function(e) {
+      var href = c.getAttribute("href");
+      if (!href || href.charAt(0) !== "#") return;
+      var target = document.getElementById(href.substring(1));
+      if (!target) return;
+      e.preventDefault();
+      var navH = (document.getElementById("sectionNav") || {}).offsetHeight || 0;
+      var top = target.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+      window.scrollTo({ top: top, behavior: "smooth" });
+    });
+  });
+}
+
+// Finish Visit dropdown
+function toggleFinishMenu() {
+  var menu = document.querySelector(".finish-menu");
+  if (!menu) return;
+  var open = menu.classList.toggle("open");
+  document.getElementById("finishMenuBtn").setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) {
+    setTimeout(function() {
+      document.addEventListener("click", outsideFinishMenu, true);
+    }, 0);
+  }
+}
+function closeFinishMenu() {
+  var menu = document.querySelector(".finish-menu");
+  if (menu) menu.classList.remove("open");
+  document.removeEventListener("click", outsideFinishMenu, true);
+}
+function outsideFinishMenu(e) {
+  if (!e.target.closest(".finish-menu")) closeFinishMenu();
+}
+
+// Toast notification. Non-blocking, auto-dismisses.
+function toast(msg, kind, ms) {
+  var host = document.querySelector(".toast-host");
+  if (!host) {
+    host = document.createElement("div");
+    host.className = "toast-host";
+    document.body.appendChild(host);
+  }
+  var t = document.createElement("div");
+  t.className = "toast " + (kind || "");
+  t.textContent = msg;
+  host.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = "0";
+    t.style.transform = "translateY(8px)";
+    t.style.transition = "all .25s";
+    setTimeout(function() { t.remove(); }, 280);
+  }, ms || 2400);
+}
+
+// Discovery banner: dismissible per device. State stored in localStorage.
+function dismissDiscoveryBanner() {
+  var el = document.getElementById("discoveryBanner");
+  if (el) el.classList.add("dismissed");
+  try { localStorage.setItem("captivate-field-banner-dismissed", "1"); } catch (e) {}
+}
+function applyDiscoveryBannerState() {
+  try {
+    if (localStorage.getItem("captivate-field-banner-dismissed") === "1") {
+      var el = document.getElementById("discoveryBanner");
+      if (el) el.classList.add("dismissed");
+    }
+  } catch (e) {}
+}
+// Dictation hint: same pattern
+function dismissDictationHint() {
+  var el = document.getElementById("dictationHint");
+  if (el) el.classList.add("dismissed");
+  try { localStorage.setItem("captivate-field-dictation-dismissed", "1"); } catch (e) {}
+}
+function applyDictationHintState() {
+  try {
+    if (localStorage.getItem("captivate-field-dictation-dismissed") === "1") {
+      var el = document.getElementById("dictationHint");
+      if (el) el.classList.add("dismissed");
+    }
+  } catch (e) {}
+}
+
+function toggleSection(btn, sectionId) {
+  var body = document.getElementById("body-" + sectionId);
+  var banner = document.getElementById("scope-" + sectionId);
+  var isHidden = body.classList.contains("collapsed");
+  if (isHidden) {
+    // Show section
+    body.classList.remove("collapsed");
+    banner.classList.remove("visible");
+    btn.innerHTML = "&#8226; In Scope";
+    btn.classList.remove("hidden-state");
+  } else {
+    // Hide section. RAG selections stay in place so the tech does not lose
+    // work if a section is toggled by mistake. updateHealthSummary skips
+    // collapsed sections, so counts will not include hidden items.
+    body.classList.add("collapsed");
+    banner.classList.add("visible");
+    btn.innerHTML = "&#8854; Not in Scope";
+    btn.classList.add("hidden-state");
+  }
+  updateHealthSummary();
+  if (typeof updateProgress === "function") updateProgress();
+  saveDraft();
+}
+
+var CHECKLISTS = {
+  networkChecklist: [
+    "Confirm correct WAN setup (IP address, DNS, gateway)",
+    "Verify DHCP settings and range allocation",
+    "Ensure firewall and security configurations are active",
+    "Test WAN failover if using multiple ISPs",
+    {text: "Test remote access VPN if supported", internal: true},
+    {text: "Confirm remote management access (if applicable)", internal: true},
+    {text: "Verify port configurations and VLANs (if used)", internal: true},
+    {text: "Label all ports on switches", internal: true},
+    {text: "Ensure PoE (Power over Ethernet) is active on required ports", internal: true},
+    {text: "Ensure STP is properly configured for Sonos", internal: true},
+    "Confirm proper placement and signal coverage for all access points",
+    "Verify WiFi SSIDs and passwords for 2.4GHz and 5GHz bands",
+    "Test AP roaming and handoff between devices",
+    {text: "Document and verify admin usernames and passwords (router, switches, APs)", internal: true},
+    {text: "Label all connected ports on WattBoxes", internal: true},
+    {text: "Confirm OvrC accounts are linked and accessible remotely", internal: true},
+    {text: "Follow OvrC labeling and naming standard", internal: true},
+    "Confirm firmware is up to date on all network equipment (router, switches, and access points)"
+  ],
+  avChecklist: [
+    "Check HDMI control (CEC) settings for all TVs",
+    "Ensure TVs are level and mounts are secured",
+    "Confirm video resolution (4K, HDR as applicable) for each TV",
+    "Test auto shut-off behavior for all TVs",
+    "Verify HDMI control functionality for receivers and amplifiers",
+    {text: "Verify proper downmix and decoder mode is working", internal: true},
+    {text: "Check audio quality settings -- run room calibration and tune the sound system (e.g. use HouseCurve app for EQ tuning on McIntosh and other audio systems)", internal: true},
+    {text: "Check video quality settings -- match the optimal picture mode, resolution, and HDR setting for each display (e.g. set to Calibrated or Filmmaker Mode, confirm 4K/HDR output is active)", internal: true},
+    {text: "Set auto shut-off settings for all receivers", internal: true},
+    {text: "Confirm HDMI control settings for cable and satellite boxes", internal: true},
+    {text: "Test auto shut-off for cable and satellite boxes", internal: true},
+    "Test cable/satellite feed signal strength",
+    {text: "Set all Apple TVs to Never Sleep", internal: true},
+    {text: "Verify HDMI control settings for all media devices", internal: true},
+    "Confirm all audio zones are functional and labeled correctly",
+    "Verify Sonos grouping and zone assignments are correct",
+    "Confirm firmware is up to date on all AV equipment (TVs, receivers, and media players)"
+  ],
+  csChecklist: [
+    "Confirm all control systems are visible on their respective cloud platforms",
+    "Verify remote access functionality (Crestron, Lutron, Control4, Savant, Josh AI)",
+    "Confirm primary control processor is online and accessible",
+    "Test all user interfaces (touchscreens, keypads, mobile app)",
+    "Verify all programmed macros and scenes are functioning correctly",
+    "Confirm firmware is up to date on all control processors",
+    "Test any scheduled automations or time-based events"
+  ],
+  lightingChecklist: [
+    "Confirm all keypads control the appropriate light loads and programmed scenes match project requirements",
+    "Verify all keypads are labeled correctly (no temp labels), engravings match programmed functions, and plate color matches design specifications",
+    "Upload all relevant lighting system files to the Captivate internal documentation folder for this client and confirm files are backed up and accessible",
+    "Verify lighting system is accessible and remotely manageable through cloud platform",
+    "Conduct full walkthrough -- test all keypads and scenes, validate user experience, and make adjustments as needed",
+    "Confirm Captivate-supplied light fixtures are installed and documented in project records",
+    "Confirm firmware is up to date on all lighting system processors and dimmers"
+  ],
+  shadingChecklist: [
+    "Confirm all shade motors are operational",
+    "Verify upper and lower limit settings are accurate for each shade",
+    "Test all programmed shade scenes and presets",
+    "Confirm shades respond to lighting scenes and control system commands",
+    "Check battery levels on all battery-powered shades",
+    "Verify shade system is accessible through cloud platform",
+    "Test remote management capabilities for shading system",
+    "Confirm all shades are labeled correctly in the control system",
+    "Confirm firmware is up to date on all shade motors and shading processors"
+  ],
+  securityChecklist: [
+    "Confirm all cameras are online and streaming",
+    "Verify camera image quality and field of view for each location",
+    "Check NVR/DVR storage availability and recording schedule",
+    "Confirm remote access to camera system is functional",
+    "Verify firmware is up to date on cameras and NVR/DVR",
+    "Test motion detection zones and alert settings",
+    "Confirm camera system credentials are documented and stored securely",
+    "Verify all cameras are labeled correctly in the system"
+  ],
+  docChecklist: [
+    {text: "Document all admin and user account details securely", internal: true},
+    {text: "Ensure all ports, devices, and cables are clearly labeled", internal: true},
+    {text: "Include IP addresses, passwords, and OvrC accounts in handoff documentation", internal: true},
+    "All system files backed up to Captivate internal documentation folder",
+    "Verify correct rack plate is installed on rack"
+  ],
+  alarmChecklist: [
+    "Verify all door and window contacts are triggering correctly",
+    "Test all motion sensors -- confirm detection zones and sensitivity",
+    "Test all keypads and confirm user codes are functional",
+    "Verify smoke and CO detector operation and alarm.com connectivity",
+    "Check and replace batteries in all wireless sensors, keypads, and smoke/CO detectors",
+    "Confirm alarm panel is communicating with monitoring center",
+    "Test siren and verify notification delivery (push, email, SMS)",
+    "Verify alarm.com remote access and live sensor status",
+    {text: "Confirm user access codes are documented and up to date", internal: true},
+    {text: "Verify panel firmware is up to date", internal: true},
+    {text: "Confirm central station account info is current", internal: true}
+  ],
+  funcChecklist: [
+    "Test connectivity for all devices (network, AV, control systems)",
+    "Verify backup and redundancy setups (dual ISPs, UPS units)",
+    "Walk through typical use cases to verify client experience",
+    "Confirm all systems can be managed remotely by Captivate",
+    "Test UPS battery backup -- verify battery health indicator, estimated runtime, and confirm UPS is actively protecting all critical equipment"
+  ]
+};
+
+var sectionLabels = {
+  networkChecklist: "Network",
+  avChecklist: "Audio/Video",
+  csChecklist: "Control Systems",
+  lightingChecklist: "Lighting",
+  shadingChecklist: "Shading",
+  securityChecklist: "Security Cameras",
+  alarmChecklist: "Alarm System",
+  docChecklist: "Documentation",
+  funcChecklist: "Functionality"
+};
+
+function buildChecklists() {
+  Object.keys(CHECKLISTS).forEach(function(tableId) {
+    var items = CHECKLISTS[tableId];
+    var tbody = document.querySelector("#" + tableId + " tbody");
+    items.forEach(function(item, i) {
+      var isInternal = (typeof item === "object" && item.internal);
+      var itemText = (typeof item === "object") ? item.text : item;
+      var tr = document.createElement("tr");
+      if (isInternal) tr.setAttribute("data-internal", "true");
+      var td1 = document.createElement("td");
+      td1.className = "item-label";
+      td1.textContent = itemText;
+      if (isInternal) {
+        var badge = document.createElement("span");
+        badge.className = "internal-badge";
+        badge.textContent = "INTERNAL";
+        td1.appendChild(badge);
+      }
+      var td2 = document.createElement("td");
+      td2.className = "rag-cell";
+      var div = document.createElement("div");
+      div.className = "rag-selector";
+      ["green","yellow","red"].forEach(function(color) {
+        var titles = {green: "Verified / Good", yellow: "Needs Attention", red: "Requires Service"};
+        var btn = document.createElement("button");
+        btn.className = "rag-btn " + color;
+        btn.title = titles[color];
+        btn.setAttribute("aria-label", titles[color] + ": " + itemText);
+        btn.setAttribute("data-section", tableId);
+        btn.setAttribute("data-item", i);
+        btn.setAttribute("data-label", "[" + sectionLabels[tableId] + "] " + itemText);
+        btn.setAttribute("data-color", color);
+        if (isInternal) btn.setAttribute("data-internal", "true");
+        btn.onclick = function() { toggleRag(this); };
+        div.appendChild(btn);
+      });
+      var naBtn = document.createElement("button");
+      naBtn.className = "rag-btn na-btn";
+      naBtn.title = "Not Applicable";
+      naBtn.setAttribute("aria-label", "Not Applicable: " + itemText);
+      naBtn.setAttribute("data-section", tableId);
+      naBtn.setAttribute("data-item", i);
+      naBtn.setAttribute("data-label", "[" + sectionLabels[tableId] + "] " + itemText);
+      naBtn.setAttribute("data-color", "na");
+      if (isInternal) naBtn.setAttribute("data-internal", "true");
+      naBtn.textContent = "N/A";
+      naBtn.onclick = function() { toggleRag(this); };
+      div.appendChild(naBtn);
+      td2.appendChild(div);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function toggleRag(btn) {
+  var siblings = btn.parentElement.querySelectorAll(".rag-btn");
+  var wasActive = btn.classList.contains("active");
+  // A manual tap clears any auto-suggest marker so future speed edits
+  // won't override the tech's choice.
+  siblings.forEach(function(b) { b.classList.remove("active"); b.removeAttribute("data-auto"); });
+  if (!wasActive) btn.classList.add("active");
+  updateHealthSummary();
+  if (typeof updateSectionBadges === "function") updateSectionBadges();
+  if (typeof updateProgress === "function") updateProgress();
+  saveDraft();
+}
+
+function updateHealthSummary() {
+  // Skip rag buttons inside collapsed (Not in Scope) sections
+  var all = Array.prototype.filter.call(
+    document.querySelectorAll(".checklist .rag-btn.active"),
+    function(btn) { return !btn.closest(".card-body.collapsed"); }
+  );
+  var g = 0, y = 0, r = 0, n = 0;
+  var findings = [];
+  // Per-section client-facing counts (for print summary)
+  var sectionCounts = {};
+  var pg = 0, py = 0, pr = 0, pn = 0;
+  var sectionOrder = ["networkChecklist","avChecklist","csChecklist","lightingChecklist","shadingChecklist","securityChecklist","alarmChecklist","docChecklist","funcChecklist"];
+  var sectionNames = {
+    networkChecklist:"Network", avChecklist:"Audio/Video", csChecklist:"Control Systems",
+    lightingChecklist:"Lighting", shadingChecklist:"Shading", securityChecklist:"Security Cameras",
+    alarmChecklist:"Alarm System", docChecklist:"Documentation", funcChecklist:"Functionality"
+  };
+  all.forEach(function(btn) {
+    var color = btn.getAttribute("data-color");
+    var isInternal = !!btn.getAttribute("data-internal");
+    var section = btn.getAttribute("data-section");
+    // All-item counts for on-screen dashboard
+    if (color === "green") g++;
+    else if (color === "yellow") { y++; findings.push({color:"yellow", label: btn.getAttribute("data-label") || "Item flagged"}); }
+    else if (color === "red") { r++; findings.push({color:"red", label: btn.getAttribute("data-label") || "Item flagged"}); }
+    else if (color === "na") n++;
+    // Client-facing only counts for print
+    if (!isInternal && section) {
+      if (!sectionCounts[section]) sectionCounts[section] = {g:0, y:0, r:0, n:0};
+      if (color === "green") { sectionCounts[section].g++; pg++; }
+      else if (color === "yellow") { sectionCounts[section].y++; py++; }
+      else if (color === "red") { sectionCounts[section].r++; pr++; }
+      else if (color === "na") { sectionCounts[section].n++; pn++; }
+    }
+  });
+  document.getElementById("greenCount").textContent = g || "--";
+  document.getElementById("yellowCount").textContent = y || "--";
+  document.getElementById("redCount").textContent = r || "--";
+  document.getElementById("naCount").textContent = n || "--";
+  // Positive note (screen)
+  var posNote = document.getElementById("healthPositiveNote");
+  if (posNote) {
+    if (g > 0) {
+      posNote.style.display = "block";
+      posNote.innerHTML = "&#10003;&nbsp; <strong>" + g + " item" + (g === 1 ? "" : "s") + " verified and working as expected</strong> -- great shape across the system.";
+    } else {
+      posNote.style.display = "none";
+    }
+  }
+  // Client notes by section
+  var noteSections = [
+    {id:"networkNotesClient",  label:"Network"},
+    {id:"avNotesClient",       label:"Audio/Video"},
+    {id:"csNotesClient",       label:"Control Systems"},
+    {id:"lightingNotesClient", label:"Lighting"},
+    {id:"shadingNotesClient",  label:"Shading"},
+    {id:"securityNotesClient", label:"Security Cameras"},
+    {id:"alarmNotesClient",    label:"Alarm System"},
+    {id:"docNotesClient",      label:"Documentation"},
+    {id:"funcNotesClient",     label:"Functionality"}
+  ];
+  var notesHtml = "";
+  noteSections.forEach(function(s) {
+    var el = document.getElementById(s.id);
+    if (el && el.value.trim()) {
+      notesHtml += "<div class=\"finding-item\"><div style=\"width:14px;height:14px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:2px;\"></div><div class=\"finding-text\"><strong>" + s.label + ":</strong> " + el.value.trim().replace(/\n/g, " ") + "</div></div>";
+    }
+  });
+  // Screen findings list (verbose -- full item names)
+  var fl = document.getElementById("findingsList");
+  var html = "";
+  if (findings.length > 0) {
+    findings.sort(function(a,b) {
+      var rank = { red: 0, yellow: 1 };
+      return (rank[a.color] === undefined ? 9 : rank[a.color]) - (rank[b.color] === undefined ? 9 : rank[b.color]);
+    });
+    html += "<div style=\"font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;padding:6px 0 6px;\">Issues Found</div>";
+    findings.forEach(function(f) {
+      html += "<div class=\"finding-item\"><div class=\"finding-dot " + f.color + "\"></div><div class=\"finding-text\">" + f.label + "</div></div>";
+    });
+  }
+  if (notesHtml) {
+    html += "<div style=\"font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;padding:12px 0 6px;\">Client Notes by Section</div>" + notesHtml;
+  }
+  if (!html) {
+    fl.innerHTML = "<div class=\"empty-findings\">No issues flagged yet. Red and Yellow items will appear here as you complete the checklist.</div>";
+  } else {
+    fl.innerHTML = html;
+  }
+  // ---- BUILD PRINT SUMMARY ----
+  var ps = document.getElementById("printSummary");
+  if (!ps) return;
+  // Client / project header for the printed PDF
+  var pClient = (document.getElementById("clientName") || {}).value || "";
+  var pTech = (document.getElementById("techName") || {}).value || "";
+  var pTech2 = (document.getElementById("techName2") || {}).value || "";
+  var pTechDisplay = pTech2 ? pTech + " & " + pTech2 : pTech;
+  var pDate = (document.getElementById("tuneupDate") || {}).value || "";
+  var pNext = (document.getElementById("nextTuneupDate") || {}).value || "";
+  var pPrev = (document.getElementById("prevTuneupDate") || {}).value || "";
+  var pAddr1 = (document.getElementById("address1") || {}).value || "";
+  var pAddr2 = (document.getElementById("address2") || {}).value || "";
+  var pCity = (document.getElementById("city") || {}).value || "";
+  var pState = (document.getElementById("state") || {}).value || "";
+  var pZip = (document.getElementById("zip") || {}).value || "";
+  var pTier = (document.getElementById("membershipBadgeDisplay") || {}).textContent || "";
+  var pReboot = (document.getElementById("lastRouterReboot") || {}).value || "";
+  var addrLine = [pAddr1, pAddr2].filter(Boolean).join(", ");
+  var cityLine = [pCity, pState, pZip].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  var ph = "";
+  // Header block
+  ph += "<div style=\"margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--yellow);\">";
+  if (pClient) ph += "<div style=\"font-size:16px;font-weight:800;color:var(--navy);\">" + escapeHtml(pClient) + "</div>";
+  if (addrLine || cityLine) {
+    ph += "<div style=\"font-size:12px;color:#444;margin-top:2px;\">" + escapeHtml([addrLine, cityLine].filter(Boolean).join(" -- ")) + "</div>";
+  }
+  var metaBits = [];
+  if (pDate) metaBits.push("Tune Up: " + pDate);
+  if (pPrev) metaBits.push("Previous: " + pPrev);
+  if (pNext) metaBits.push("Next Recommended: " + pNext);
+  if (pTechDisplay) metaBits.push("Tech: " + pTechDisplay);
+  if (pTier && pTier !== "Select Below") metaBits.push("Tier: " + pTier);
+  if (metaBits.length) {
+    ph += "<div style=\"font-size:12px;color:#444;margin-top:4px;\">" + escapeHtml(metaBits.join("  |  ")) + "</div>";
+  }
+  if (pReboot) {
+    var rebootThen = new Date(pReboot + "T00:00:00");
+    var rebootDays = Math.floor((new Date() - rebootThen) / 86400000);
+    var rebootMonths = Math.floor(rebootDays / 30);
+    var uptimeStr = rebootMonths > 0 ? rebootMonths + " month" + (rebootMonths > 1 ? "s" : "") + " of router uptime" : rebootDays + " days of router uptime";
+    ph += "<div style=\"font-size:12px;color:#2d5a00;margin-top:4px;font-weight:600;\">" + escapeHtml(uptimeStr) + "</div>";
+  }
+  ph += "</div>";
+  // Colored count cards (client-facing counts only)
+  ph += "<div class=\"health-dashboard\" style=\"-webkit-print-color-adjust:exact;print-color-adjust:exact;\">";
+  ph += "<div class=\"health-card green\"><div class=\"count\">" + (pg || "--") + "</div><div class=\"hlabel\">Verified</div></div>";
+  ph += "<div class=\"health-card yellow\"><div class=\"count\">" + (py || "--") + "</div><div class=\"hlabel\">Needs Attention</div></div>";
+  ph += "<div class=\"health-card red\"><div class=\"count\">" + (pr || "--") + "</div><div class=\"hlabel\">Requires Service</div></div>";
+  ph += "<div class=\"health-card na\"><div class=\"count\">" + (pn || "--") + "</div><div class=\"hlabel\">Not Applicable</div></div>";
+  ph += "</div>";
+  // Section breakdown table
+  var hasRows = false;
+  var tHtml = "<table style=\"width:100%;border-collapse:collapse;margin-top:16px;\"><thead><tr>";
+  tHtml += "<th style=\"text-align:left;padding:8px 10px;background:var(--navy);color:white;font-size:12px;\">Section</th>";
+  tHtml += "<th style=\"padding:8px 10px;background:#3d6600;color:white;font-size:12px;text-align:center;\">Verified</th>";
+  tHtml += "<th style=\"padding:8px 10px;background:#8a6e00;color:white;font-size:12px;text-align:center;\">Needs Attention</th>";
+  tHtml += "<th style=\"padding:8px 10px;background:#aa1010;color:white;font-size:12px;text-align:center;\">Requires Service</th>";
+  tHtml += "</tr></thead><tbody>";
+  sectionOrder.forEach(function(key) {
+    var d = sectionCounts[key];
+    if (d && (d.g + d.y + d.r + d.n > 0)) {
+      hasRows = true;
+      var rowBg = d.r > 0 ? "#fff5f5" : (d.y > 0 ? "#fffbec" : "white");
+      tHtml += "<tr style=\"background:" + rowBg + ";\">";
+      tHtml += "<td style=\"padding:8px 10px;font-size:13px;border-bottom:1px solid #eee;font-weight:600;\">" + sectionNames[key] + "</td>";
+      tHtml += "<td style=\"padding:8px 10px;text-align:center;font-size:14px;font-weight:700;color:" + (d.g > 0 ? "#3d6600" : "#bbb") + ";border-bottom:1px solid #eee;\">" + (d.g || "-") + "</td>";
+      tHtml += "<td style=\"padding:8px 10px;text-align:center;font-size:14px;font-weight:700;color:" + (d.y > 0 ? "#8a6e00" : "#bbb") + ";border-bottom:1px solid #eee;\">" + (d.y || "-") + "</td>";
+      tHtml += "<td style=\"padding:8px 10px;text-align:center;font-size:14px;font-weight:700;color:" + (d.r > 0 ? "#aa1010" : "#bbb") + ";border-bottom:1px solid #eee;\">" + (d.r || "-") + "</td>";
+      tHtml += "</tr>";
+    }
+  });
+  tHtml += "</tbody></table>";
+  if (hasRows) ph += tHtml;
+  // WiFi speed test snapshot (print version)
+  var wifiRows = document.querySelectorAll("#wifiBody tr");
+  var wifiBlock = "";
+  var wifiPrintRows = "";
+  wifiRows.forEach(function(row) {
+    var inputs = row.querySelectorAll("input");
+    if (!inputs.length) return;
+    var loc = (inputs[0] && inputs[0].value || "").trim();
+    var dl = (inputs[1] && inputs[1].value || "").trim();
+    var ul = (inputs[2] && inputs[2].value || "").trim();
+    var sigBtn = row.querySelector(".rag-btn.active");
+    var sigColor = sigBtn ? sigBtn.getAttribute("data-color") || (sigBtn.classList.contains("green") ? "green" : (sigBtn.classList.contains("yellow") ? "yellow" : (sigBtn.classList.contains("red") ? "red" : ""))) : "";
+    var sigLabel = sigColor === "green" ? "Strong" : (sigColor === "yellow" ? "Weak" : (sigColor === "red" ? "No Signal" : "--"));
+    var sigBg = sigColor === "green" ? "#3d6600" : (sigColor === "yellow" ? "#8a6e00" : (sigColor === "red" ? "#aa1010" : "#999"));
+    if (loc || dl || ul || sigBtn) {
+      wifiPrintRows += "<tr>";
+      wifiPrintRows += "<td style=\"padding:6px 10px;font-size:12px;border-bottom:1px solid #eee;\">" + escapeHtml(loc || "--") + "</td>";
+      wifiPrintRows += "<td style=\"padding:6px 10px;font-size:12px;text-align:center;border-bottom:1px solid #eee;\">" + escapeHtml(dl || "--") + "</td>";
+      wifiPrintRows += "<td style=\"padding:6px 10px;font-size:12px;text-align:center;border-bottom:1px solid #eee;\">" + escapeHtml(ul || "--") + "</td>";
+      wifiPrintRows += "<td style=\"padding:6px 10px;font-size:11px;text-align:center;border-bottom:1px solid #eee;color:white;background:" + sigBg + ";-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:700;\">" + escapeHtml(sigLabel) + "</td>";
+      wifiPrintRows += "</tr>";
+    }
+  });
+  if (wifiPrintRows) {
+    wifiBlock += "<div style=\"margin-top:18px;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;padding-bottom:6px;border-bottom:2px solid var(--yellow);display:inline-block;\">WiFi Speed Tests</div>";
+    wifiBlock += "<table style=\"width:100%;border-collapse:collapse;margin-top:6px;\"><thead><tr>";
+    wifiBlock += "<th style=\"text-align:left;padding:6px 10px;background:var(--navy);color:white;font-size:11px;\">Location</th>";
+    wifiBlock += "<th style=\"padding:6px 10px;background:var(--navy);color:white;font-size:11px;text-align:center;\">Down (Mbps)</th>";
+    wifiBlock += "<th style=\"padding:6px 10px;background:var(--navy);color:white;font-size:11px;text-align:center;\">Up (Mbps)</th>";
+    wifiBlock += "<th style=\"padding:6px 10px;background:var(--navy);color:white;font-size:11px;text-align:center;\">Signal</th>";
+    wifiBlock += "</tr></thead><tbody>" + wifiPrintRows + "</tbody></table>";
+    ph += wifiBlock;
+  }
+  // Client notes (print version)
+  var cnHtml = "";
+  noteSections.forEach(function(s) {
+    var el = document.getElementById(s.id);
+    if (el && el.value.trim()) {
+      cnHtml += "<div style=\"padding:8px 0;border-bottom:1px solid #eee;\"><strong style=\"font-size:12px;color:var(--navy);text-transform:uppercase;letter-spacing:0.3px;\">" + s.label + "</strong><div style=\"font-size:13px;margin-top:3px;\">" + el.value.trim() + "</div></div>";
+    }
+  });
+  if (cnHtml) {
+    ph += "<div style=\"margin-top:18px;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;padding-bottom:6px;border-bottom:2px solid var(--yellow);display:inline-block;\">Client Notes</div>" + cnHtml;
+  }
+  if (!hasRows && !cnHtml && pg === 0) {
+    ph += "<p style=\"color:#888;font-size:13px;margin-top:16px;\">Complete the checklist above to populate this summary.</p>";
+  }
+  ps.innerHTML = ph;
+}
+
+function setMembership(btn, tier) {
+  document.querySelectorAll(".mem-btn").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  document.getElementById("membershipBadgeDisplay").textContent = tier;
+  var statusEl = document.getElementById("membershipStatus");
+  statusEl.style.display = "block";
+  if (tier === "Proactive" || tier === "Signature") {
+    statusEl.style.background = "#e8f5d0";
+    statusEl.style.border = "1.5px solid #80BC00";
+    statusEl.style.color = "#2d5a00";
+    statusEl.innerHTML = "&#10003;&nbsp; <strong>" + tier + "</strong> -- Tune Up included (2 per year at no additional charge)";
+  } else if (tier === "Standard") {
+    statusEl.style.background = "#fde8e8";
+    statusEl.style.border = "1.5px solid #aa1010";
+    statusEl.style.color = "#6b1010";
+    statusEl.innerHTML = "&#9888;&nbsp; <strong>" + tier + "</strong> -- Not a member. Tune Up billed separately. Recommend Proactive or Signature for 2 included tune ups per year, faster response times, and after-hours coverage.";
+  } else {
+    statusEl.style.background = "#fef9e0";
+    statusEl.style.border = "1.5px solid #c9a800";
+    statusEl.style.color = "#6b4e00";
+    statusEl.innerHTML = "&#9888;&nbsp; <strong>" + tier + "</strong> -- Tune Up billed separately. Upgrade to Proactive or Signature for 2 included tune ups per year.";
+  }
+  saveDraft();
+}
+
+function addWifiRow() {
+  var tbody = document.getElementById("wifiBody");
+  var tr = document.createElement("tr");
+  tr.innerHTML = "<td><input type=\"text\" placeholder=\"e.g. Office, Guest Room\"></td>" +
+    "<td><input type=\"number\" placeholder=\"0\" min=\"0\" oninput=\"onWifiSpeedChange(this)\"></td>" +
+    "<td><input type=\"number\" placeholder=\"0\" min=\"0\"></td>" +
+    "<td><div class=\"rag-selector\"><button class=\"rag-btn green\" title=\"Strong Signal\" aria-label=\"Strong WiFi Signal\" onclick=\"toggleRag(this)\"></button><button class=\"rag-btn yellow\" title=\"Weak Signal\" aria-label=\"Weak WiFi Signal\" onclick=\"toggleRag(this)\"></button><button class=\"rag-btn red\" title=\"No Signal\" aria-label=\"No WiFi Signal\" onclick=\"toggleRag(this)\"></button></div></td>" +
+    "<td><button class=\"wifi-row-delete\" onclick=\"deleteWifiRow(this)\" aria-label=\"Remove row\">&#10005;</button></td>";
+  tbody.appendChild(tr);
+  saveDraft();
+}
+
+// Auto-suggest WiFi signal RAG when the tech enters a download speed.
+// Only fires if no rag-btn in the row has been manually activated, so a
+// previously-set value is never stomped.
+function onWifiSpeedChange(input) {
+  var row = input.closest("tr");
+  if (!row) return;
+  var rag = row.querySelectorAll(".rag-btn");
+  if (!rag.length) return;
+  // If the tech already picked a status manually, do not override
+  var manual = row.querySelector(".rag-btn.active");
+  if (manual && manual.getAttribute("data-auto") !== "1") {
+    saveDraft();
+    return;
+  }
+  var v = parseFloat(input.value);
+  // Clear current auto-set selection
+  rag.forEach(function(b) { b.classList.remove("active"); b.removeAttribute("data-auto"); });
+  if (!isNaN(v) && v > 0) {
+    var pick = null;
+    if (v >= 500) pick = row.querySelector(".rag-btn.green");
+    else if (v >= 100) pick = row.querySelector(".rag-btn.yellow");
+    else pick = row.querySelector(".rag-btn.red");
+    if (pick) {
+      pick.classList.add("active");
+      pick.setAttribute("data-auto", "1");
+    }
+  }
+  saveDraft();
+}
+
+function deleteWifiRow(btn) {
+  var rows = document.getElementById("wifiBody").querySelectorAll("tr");
+  if (rows.length > 1) {
+    btn.closest("tr").remove();
+    saveDraft();
+  }
+}
+
+// ---------- FIELD-DISCOVERY-STYLE PRINT BUILDER ----------
+// Generates a clean scope-doc layout that prints in place of the editor.
+// Icons used in section headers on the printed report
+var SECTION_PRINT_ICONS = {
+  "network": "&#127760;",          // globe
+  "audio-video": "&#127916;",      // movie clapper
+  "control-systems": "&#9881;",    // gear
+  "lighting-controls": "&#128161;",// lightbulb
+  "shading": "&#127762;",          // sun
+  "security-cameras": "&#128274;", // lock
+  "alarm-system": "&#128680;",     // alarm
+  "_doc": "&#128193;",             // folder
+  "_func": "&#9989;"               // check
+};
+
+function buildFieldPrint() {
+  var host = document.getElementById("fieldPrint");
+  if (!host) return;
+  var v = function(id) {
+    var e = document.getElementById(id);
+    if (!e) return "";
+    if (e.tagName === "INPUT" || e.tagName === "TEXTAREA" || e.tagName === "SELECT") {
+      return (e.value || "").trim();
+    }
+    return (e.textContent || "").trim();
+  };
+  var client = v("clientName") || "Unnamed Client";
+  var tech = v("techName"), tech2 = v("techName2");
+  var techDisplay = tech2 ? tech + " & " + tech2 : tech;
+  var market = v("market");
+  var date = v("tuneupDate");
+  var prev = v("prevTuneupDate");
+  var next = v("nextTuneupDate");
+  var addr1 = v("address1"), addr2 = v("address2");
+  var city = v("city"), state = v("state"), zip = v("zip");
+  var tier = v("membershipBadgeDisplay");
+  if (tier === "Select Below") tier = "";
+  var reboot = v("lastRouterReboot");
+  var csm = v("csmName");
+  var addrLine = [addr1, addr2].filter(Boolean).join(", ");
+  var cityLine = [city, state, zip].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  var property = [addrLine, cityLine].filter(Boolean).join(" -- ");
+
+  var html = "";
+
+  // ---------- LETTERHEAD ----------
+  // Text-only header. The Captivate brand mark was removed because the
+  // print engine on iPad Safari was rendering it inconsistently.
+  html += '<div class="letterhead">';
+  html += '<div class="titles">';
+  html += '<div class="brand-eyebrow">Captivate &middot; Elevated Home Technology</div>';
+  html += '<h1>Field Tune Up Report</h1>';
+  html += '<div class="client">' + escapeHtml(client) + '</div>';
+  html += '</div>';
+  html += '<div class="meta">';
+  if (date) html += '<strong>' + escapeHtml(date) + '</strong><br>';
+  if (techDisplay) html += escapeHtml(techDisplay) + '<br>';
+  if (market) html += escapeHtml(market);
+  html += '</div>';
+  html += '</div>';
+
+  // ---------- PROJECT DETAILS CARD ----------
+  function detail(label, val) {
+    if (!val) return "";
+    return '<div class="row"><div class="label">' + escapeHtml(label) + '</div><div class="value">' + escapeHtml(val) + '</div></div>';
+  }
+  // Compute uptime once
+  var uptimeText = "";
+  if (reboot) {
+    var rt = new Date(reboot + "T00:00:00");
+    var days = Math.floor((new Date() - rt) / 86400000);
+    var months = Math.floor(days / 30);
+    uptimeText = months > 0 ? months + " month" + (months > 1 ? "s" : "") + " of router uptime" : days + " days of router uptime";
+  }
+
+  html += '<div class="details-card">';
+  html += '<div class="details"><div class="details-rows">';
+  html += detail("Property", property || "--");
+  html += detail("Lead Tech", techDisplay);
+  if (csm) html += detail("CSM", csm);
+  if (market) html += detail("Market", market);
+  if (prev) html += detail("Previous Tune Up", prev);
+  if (next) html += detail("Next Recommended", next);
+  if (uptimeText) html += detail("Router", uptimeText);
+  html += '</div></div>';
+  // Tier side
+  var tierClass = "";
+  var tierNote = "";
+  if (tier === "Proactive" || tier === "Signature") {
+    tierClass = "member";
+    tierNote = "Tune Up included (2 per year)";
+  } else if (tier === "Standard") {
+    tierClass = "standard";
+    tierNote = "Non-member &mdash; quote applies";
+  } else if (tier) {
+    tierClass = "standard";
+    tierNote = "Billed separately";
+  }
+  html += '<div class="tier-side">';
+  html += '<div class="tier-eyebrow">Membership</div>';
+  if (tier) {
+    html += '<div class="tier-pill ' + tierClass + '">' + escapeHtml(tier) + '</div>';
+    if (tierNote) html += '<div class="tier-note">' + tierNote + '</div>';
+  } else {
+    html += '<div class="tier-pill standard">Not selected</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // ---------- SYSTEM HEALTH KPI ROW ----------
+  var counts = computeFieldCounts();
+  html += '<div class="kpi-row">';
+  html += '<div class="kpi green"><div class="num">' + counts.g + '</div><div class="lbl">Verified</div></div>';
+  html += '<div class="kpi yellow"><div class="num">' + counts.y + '</div><div class="lbl">Needs Attention</div></div>';
+  html += '<div class="kpi red"><div class="num">' + counts.r + '</div><div class="lbl">Requires Service</div></div>';
+  html += '</div>';
+
+  // ---------- PER-SECTION BLOCKS ----------
+  SECTION_KEYS.concat([
+    { key: "_doc",  label: "Documentation", checklistId: "docChecklist", notesId: "docNotesClient" },
+    { key: "_func", label: "Functional Testing", checklistId: "funcChecklist", notesId: "funcNotesClient" }
+  ]).forEach(function(s) {
+    var body = document.getElementById("body-" + s.key);
+    if (body && body.classList.contains("collapsed")) return;
+    var checklistId = s.checklistId || (
+      s.key === "audio-video" ? "avChecklist" :
+      s.key === "control-systems" ? "csChecklist" :
+      s.key === "lighting-controls" ? "lightingChecklist" :
+      s.key === "shading" ? "shadingChecklist" :
+      s.key === "security-cameras" ? "securityChecklist" :
+      s.key === "alarm-system" ? "alarmChecklist" :
+      s.key === "network" ? "networkChecklist" : null
+    );
+    var notesId = s.notesId || (
+      s.key === "audio-video" ? "avNotesClient" :
+      s.key === "control-systems" ? "csNotesClient" :
+      s.key === "lighting-controls" ? "lightingNotesClient" :
+      s.key === "shading" ? "shadingNotesClient" :
+      s.key === "security-cameras" ? "securityNotesClient" :
+      s.key === "alarm-system" ? "alarmNotesClient" :
+      s.key === "network" ? "networkNotesClient" : null
+    );
+    var flagged = [];
+    if (checklistId) {
+      document.querySelectorAll("#" + checklistId + " .rag-btn.active").forEach(function(btn) {
+        if (btn.getAttribute("data-internal")) return;
+        var color = btn.getAttribute("data-color");
+        if (color === "red" || color === "yellow") {
+          var label = btn.getAttribute("data-label") || "";
+          label = label.replace(/^\[[^\]]+\]\s*/, "");
+          flagged.push({ color: color, label: label });
+        }
+      });
+    }
+    var notesEl = notesId ? document.getElementById(notesId) : null;
+    var notesText = notesEl ? notesEl.value.trim() : "";
+    if (flagged.length === 0 && !notesText) return;
+
+    var icon = SECTION_PRINT_ICONS[s.key] || "&#9679;";
+    html += '<div class="field-section">';
+    html += '<div class="section-head">';
+    html += '<span class="icon">' + icon + '</span>';
+    html += '<h2>' + escapeHtml(s.label) + '</h2>';
+    html += '<span class="accent"></span>';
+    html += '</div>';
+    if (notesText) {
+      html += '<div class="notes-callout">';
+      html += '<div class="label">Notes for Client</div>';
+      html += escapeHtml(notesText).replace(/\n/g, "<br>");
+      html += '</div>';
+    }
+    if (flagged.length) {
+      html += '<div class="findings-list">';
+      flagged.sort(function(a, b) { return a.color === "red" ? -1 : 1; });
+      flagged.forEach(function(f) {
+        html += '<div class="finding ' + f.color + '">';
+        html += '<span class="status">' + (f.color === "red" ? "Service" : "Attention") + '</span>';
+        html += '<div class="text">' + escapeHtml(f.label) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  // ---------- WIFI BLOCK ----------
+  var wifiRows = [];
+  document.querySelectorAll("#wifiBody tr").forEach(function(row) {
+    var inputs = row.querySelectorAll("input");
+    if (!inputs.length) return;
+    var loc = (inputs[0] && inputs[0].value || "").trim();
+    var dl = (inputs[1] && inputs[1].value || "").trim();
+    var ul = (inputs[2] && inputs[2].value || "").trim();
+    var sigBtn = row.querySelector(".rag-btn.active");
+    var sigColor = "", sigLabel = "";
+    if (sigBtn) {
+      if (sigBtn.classList.contains("green")) { sigColor = "green"; sigLabel = "Strong"; }
+      else if (sigBtn.classList.contains("yellow")) { sigColor = "yellow"; sigLabel = "Weak"; }
+      else if (sigBtn.classList.contains("red")) { sigColor = "red"; sigLabel = "No Signal"; }
+    }
+    if (loc || dl || ul || sigLabel) wifiRows.push({ loc: loc, dl: dl, ul: ul, sigColor: sigColor, sigLabel: sigLabel });
+  });
+  if (wifiRows.length) {
+    html += '<div class="field-section">';
+    html += '<div class="section-head"><span class="icon">&#128246;</span><h2>WiFi Speed Tests</h2><span class="accent"></span></div>';
+    html += '<table class="wifi-print"><thead><tr>';
+    html += '<th>Location</th>';
+    html += '<th class="center">Down (Mbps)</th>';
+    html += '<th class="center">Up (Mbps)</th>';
+    html += '<th class="center">Signal</th>';
+    html += '</tr></thead><tbody>';
+    wifiRows.forEach(function(w) {
+      html += '<tr>';
+      html += '<td>' + escapeHtml(w.loc || "--") + '</td>';
+      html += '<td class="center speed">' + escapeHtml(w.dl || "--") + '</td>';
+      html += '<td class="center speed">' + escapeHtml(w.ul || "--") + '</td>';
+      html += '<td class="signal ' + (w.sigColor || "") + '">' + escapeHtml(w.sigLabel || "--") + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    html += '</div>';
+  }
+
+  // ---------- PHOTO GALLERY (polaroid cards) ----------
+  if (GLOBAL_PHOTOS.length) {
+    html += '<div class="field-section">';
+    html += '<div class="section-head"><span class="icon">&#128247;</span><h2>Photos</h2><span class="accent"></span></div>';
+    html += '<div class="photo-grid">';
+    GLOBAL_PHOTOS.forEach(function(p) {
+      html += '<div class="photo-card">';
+      html += '<div class="img-wrap"><img src="' + p.data + '" alt="' + escapeHtml(p.label || "photo") + '"></div>';
+      html += '<div class="caption">' + escapeHtml(p.label || "Untitled") + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  // ---------- TECH RECOMMENDATIONS CALLOUT ----------
+  var techRecs = (document.getElementById("recommendations") || {}).value || "";
+  if (techRecs.trim()) {
+    html += '<div class="recs-callout">';
+    html += '<h3>Tech Recommendations</h3>';
+    html += '<p>' + escapeHtml(techRecs.trim()).replace(/\n/g, "<br>") + '</p>';
+    html += '</div>';
+  }
+
+  // ---------- SERVICE QUOTE FRAMING (only Standard + Red items) ----------
+  if (tier === "Standard" && counts.r > 0) {
+    html += '<div class="quote-framing">';
+    html += '<div class="qf-eyebrow">Service Quote Framing &middot; CSM heads-up</div>';
+    html += '<p>This service quote involves supplying the necessary components and labor to resolve the current issue, or complete the project. The equipment is itemized; any changes in equipment will be documented, reported, and approved as they arise. The installation, programming, design and management labor will be billed at $150 per hour per technician.</p>';
+    html += '<p style="margin-top:6px;"><strong>Standard tier + ' + counts.r + ' service item' + (counts.r === 1 ? '' : 's') + '.</strong> Build a Scope of Work using the items flagged above.</p>';
+    html += '</div>';
+  }
+
+  // ---------- SIGN-OFF ----------
+  var signoffTech = v("signoffTech");
+  var signoffDate = v("signoffDate");
+  html += '<div class="signoff">';
+  html += '<div class="so-block"><div class="label">Completed By</div><div class="value">' + escapeHtml(signoffTech || "--") + '</div></div>';
+  html += '<div class="so-block"><div class="label">Date Completed</div><div class="value">' + escapeHtml(signoffDate || "--") + '</div></div>';
+  html += '</div>';
+
+  // ---------- FOOTER ----------
+  html += '<div class="footer">';
+  html += '<strong>Captivate</strong> &middot; Elevated Home Technology &middot; Austin &amp; Boerne, TX &middot; captivatetx.com';
+  html += '</div>';
+
+  host.innerHTML = html;
+}
+
+function computeFieldCounts() {
+  var g = 0, y = 0, r = 0;
+  // Mirror updateHealthSummary's logic: skip collapsed sections, count client-facing only
+  var btns = Array.prototype.filter.call(
+    document.querySelectorAll(".checklist .rag-btn.active"),
+    function(b) {
+      if (b.closest(".card-body.collapsed")) return false;
+      if (b.getAttribute("data-internal")) return false;
+      return true;
+    }
+  );
+  btns.forEach(function(b) {
+    var c = b.getAttribute("data-color");
+    if (c === "green") g++;
+    else if (c === "yellow") y++;
+    else if (c === "red") r++;
+  });
+  return { g: g, y: y, r: r };
+}
+
+// ---------- SPLASH SCREEN ----------
+var splashState = { tech: null, market: null };
+function initSplash() {
+  // Mirror the header logo onto the splash mark so we don't duplicate the
+  // huge base64 source.
+  var hdr = document.getElementById("captivateLogo");
+  var splashLogo = document.getElementById("splashLogo");
+  if (hdr && splashLogo) splashLogo.src = hdr.src;
+  // Today's date in friendly format
+  var dateEl = document.getElementById("splashDate");
+  if (dateEl) {
+    try {
+      dateEl.textContent = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+    } catch (e) { dateEl.textContent = ""; }
+  }
+  document.querySelectorAll("#splashTechPickers .pk").forEach(function(b) {
+    b.addEventListener("click", function() {
+      document.querySelectorAll("#splashTechPickers .pk").forEach(function(x) { x.classList.remove("selected"); });
+      b.classList.add("selected");
+      splashState.tech = b.getAttribute("data-splash-tech");
+      updateSplashCta();
+    });
+  });
+  document.querySelectorAll("#splashMarketPickers .pk").forEach(function(b) {
+    b.addEventListener("click", function() {
+      document.querySelectorAll("#splashMarketPickers .pk").forEach(function(x) { x.classList.remove("selected"); });
+      b.classList.add("selected");
+      splashState.market = b.getAttribute("data-splash-market");
+      updateSplashCta();
+    });
+  });
+  // Tech profile memory: pre-select the last-used tech and market on this
+  // device so the splash is one tap away from dismissing.
+  try {
+    var lastTech = localStorage.getItem("captivate-field-last-tech") || "";
+    var lastMarket = localStorage.getItem("captivate-field-last-market") || "";
+    if (lastTech) {
+      var pkTech = document.querySelector("#splashTechPickers .pk[data-splash-tech='" + lastTech + "']");
+      if (pkTech) { pkTech.classList.add("selected"); splashState.tech = lastTech; }
+    }
+    if (lastMarket) {
+      var pkMkt = document.querySelector("#splashMarketPickers .pk[data-splash-market='" + lastMarket + "']");
+      if (pkMkt) { pkMkt.classList.add("selected"); splashState.market = lastMarket; }
+    }
+    updateSplashCta();
+  } catch (e) {}
+  // If autosave already has both, dismiss splash silently after restore
+  // (handled in restoreDraft by calling closeSplashIfReady)
+}
+function updateSplashCta() {
+  var btn = document.getElementById("splashContinue");
+  if (!btn) return;
+  btn.disabled = !(splashState.tech && splashState.market);
+}
+function closeSplash() {
+  if (!splashState.tech || !splashState.market) return;
+  var techSel = document.getElementById("techName");
+  var techSel2 = document.getElementById("techName2");
+  var mktSel = document.getElementById("market");
+  var signoffSel = document.getElementById("signoffTech");
+  // Re-opening splash mid-session: if a lead tech is already set and the
+  // new pick is someone different, route the new pick to Helper Tech and
+  // keep the original lead. If the user picked the same person, no change.
+  var currentLead = techSel ? techSel.value : "";
+  if (currentLead && splashState.tech && splashState.tech !== currentLead) {
+    if (splashState.replaceLead) {
+      // Explicit "Replace Lead" path
+      if (techSel) techSel.value = splashState.tech;
+    } else {
+      // Default: keep lead, set helper
+      if (techSel2) techSel2.value = splashState.tech;
+    }
+  } else {
+    if (techSel) techSel.value = splashState.tech;
+  }
+  if (mktSel) mktSel.value = splashState.market;
+  // Reflect lead tech in sign-off if blank; do not stomp an existing value
+  if (signoffSel && !signoffSel.value) signoffSel.value = (techSel && techSel.value) || splashState.tech;
+  splashState.replaceLead = false;
+  onTechMarketChange();
+  var ov = document.getElementById("splashOverlay");
+  if (ov) ov.style.display = "none";
+  // Remember the last-used pick on this device so the next launch is one tap.
+  try {
+    if (splashState.tech) localStorage.setItem("captivate-field-last-tech", splashState.tech);
+    if (splashState.market) localStorage.setItem("captivate-field-last-market", splashState.market);
+  } catch (e) {}
+  saveDraft();
+}
+function closeSplashIfReady() {
+  var t = (document.getElementById("techName") || {}).value;
+  var m = (document.getElementById("market") || {}).value;
+  if (t && m) {
+    splashState.tech = t;
+    splashState.market = m;
+    var ov = document.getElementById("splashOverlay");
+    if (ov) ov.style.display = "none";
+    onTechMarketChange();
+  }
+}
+function reopenSplash() {
+  var ov = document.getElementById("splashOverlay");
+  if (ov) ov.style.display = "flex";
+  // Pre-highlight current selections
+  document.querySelectorAll("#splashTechPickers .pk").forEach(function(b) {
+    b.classList.toggle("selected", b.getAttribute("data-splash-tech") === splashState.tech);
+  });
+  document.querySelectorAll("#splashMarketPickers .pk").forEach(function(b) {
+    b.classList.toggle("selected", b.getAttribute("data-splash-market") === splashState.market);
+  });
+  // Show the helper hint if a lead tech is already set
+  var leadEl = document.getElementById("techName");
+  var helperHint = document.getElementById("splashHelperHint");
+  if (helperHint) {
+    if (leadEl && leadEl.value) {
+      helperHint.style.display = "block";
+      helperHint.querySelector(".lead-name").textContent = leadEl.value;
+      var replaceCk = document.getElementById("splashReplaceLead");
+      if (replaceCk) replaceCk.checked = false;
+    } else {
+      helperHint.style.display = "none";
+    }
+  }
+  updateSplashCta();
+}
+
+// CSM directory: name -> email + default market
+var CSMS = {
+  "Quinn":  { email: "quinn@captivatetx.com",  market: "Austin" },
+  "Martin": { email: "martin@captivatetx.com", market: "Boerne" }
+};
+function csmEmailFor(name) { return (CSMS[name] && CSMS[name].email) || ""; }
+function defaultCsmForMarket(market) {
+  if (!market) return "";
+  var keys = Object.keys(CSMS);
+  for (var i = 0; i < keys.length; i++) {
+    if (CSMS[keys[i]].market === market) return keys[i];
+  }
+  return "";
+}
+
+function onTechMarketChange() {
+  var t = (document.getElementById("techName") || {}).value || "";
+  var t2 = (document.getElementById("techName2") || {}).value || "";
+  var m = (document.getElementById("market") || {}).value || "";
+  var csmSel = document.getElementById("csmName");
+  // Auto-suggest CSM based on market when nothing is picked yet
+  if (csmSel && !csmSel.value && m) {
+    var def = defaultCsmForMarket(m);
+    if (def) csmSel.value = def;
+  }
+  splashState.tech = t || splashState.tech;
+  splashState.market = m || splashState.market;
+  var hdr = document.getElementById("headerTechMarket");
+  if (hdr) {
+    var bits = [];
+    if (t) bits.push(t2 ? t + " & " + t2 : t);
+    if (m) bits.push(m);
+    var csmVal = csmSel ? csmSel.value : "";
+    if (csmVal) bits.push("CSM: " + csmVal);
+    hdr.textContent = bits.length ? bits.join("  |  ") : "--";
+  }
+  saveDraft();
+}
+
+// ---------- GLOBAL PHOTOS (with IndexedDB persistence) ----------
+// One shared photo gallery. Photos persist across reload, iPad sleep, and
+// browser eviction via IndexedDB. localStorage is not used for photos
+// because base64 photos would overflow its 5-10MB quota.
+var GLOBAL_PHOTOS = []; // in-memory mirror of IDB
+var PHOTO_DB = null;    // resolved IDBDatabase
+var PHOTO_DB_NAME = "captivate-field-tune-up";
+var PHOTO_DB_STORE = "photos";
+
+function openPhotoDB() {
+  if (PHOTO_DB) return Promise.resolve(PHOTO_DB);
+  return new Promise(function(resolve) {
+    if (!("indexedDB" in window)) { resolve(null); return; }
+    var req = indexedDB.open(PHOTO_DB_NAME, 1);
+    req.onupgradeneeded = function() {
+      var db = req.result;
+      if (!db.objectStoreNames.contains(PHOTO_DB_STORE)) {
+        db.createObjectStore(PHOTO_DB_STORE, { keyPath: "id" });
+      }
+    };
+    req.onsuccess = function() { PHOTO_DB = req.result; resolve(PHOTO_DB); };
+    req.onerror = function() { resolve(null); };
+  });
+}
+function photoDbPut(record) {
+  return openPhotoDB().then(function(db) {
+    if (!db) return;
+    return new Promise(function(resolve) {
+      var tx = db.transaction(PHOTO_DB_STORE, "readwrite");
+      tx.objectStore(PHOTO_DB_STORE).put(record);
+      tx.oncomplete = function() { resolve(); };
+      tx.onerror = function() { resolve(); };
+    });
+  });
+}
+function photoDbDelete(id) {
+  return openPhotoDB().then(function(db) {
+    if (!db) return;
+    return new Promise(function(resolve) {
+      var tx = db.transaction(PHOTO_DB_STORE, "readwrite");
+      tx.objectStore(PHOTO_DB_STORE).delete(id);
+      tx.oncomplete = function() { resolve(); };
+      tx.onerror = function() { resolve(); };
+    });
+  });
+}
+function photoDbClear() {
+  return openPhotoDB().then(function(db) {
+    if (!db) return;
+    return new Promise(function(resolve) {
+      var tx = db.transaction(PHOTO_DB_STORE, "readwrite");
+      tx.objectStore(PHOTO_DB_STORE).clear();
+      tx.oncomplete = function() { resolve(); };
+      tx.onerror = function() { resolve(); };
+    });
+  });
+}
+function photoDbLoadAll() {
+  return openPhotoDB().then(function(db) {
+    if (!db) return [];
+    return new Promise(function(resolve) {
+      var tx = db.transaction(PHOTO_DB_STORE, "readonly");
+      var req = tx.objectStore(PHOTO_DB_STORE).getAll();
+      req.onsuccess = function() { resolve(req.result || []); };
+      req.onerror = function() { resolve([]); };
+    });
+  });
+}
+function loadPhotosFromDB() {
+  return photoDbLoadAll().then(function(list) {
+    if (list && list.length) {
+      GLOBAL_PHOTOS = list;
+      renderGlobalPhotos();
+    }
+  });
+}
+
+// Back-compat helpers used by output code paths; per-section storage is gone.
+function ensureSectionPhotos() { return []; }
+
+function renderGlobalPhotos() {
+  var host = document.getElementById("globalPhotoGrid");
+  if (!host) return;
+  var html = "";
+  GLOBAL_PHOTOS.forEach(function(p) {
+    html += '<div class="section-photo-tile has-photo" data-photo-id="' + p.id + '">';
+    html += '<img src="' + p.data + '" alt="' + escapeHtml(p.label || "photo") + '">';
+    if (p.label) html += '<span class="photo-label">' + escapeHtml(p.label) + '</span>';
+    html += '<button class="photo-remove" type="button" onclick="removeGlobalPhoto(\'' + p.id + '\')" aria-label="Remove photo">&#10005;</button>';
+    html += '</div>';
+  });
+  // Two add tiles: Take Photo (camera) and From Library
+  html += '<label class="section-photo-tile" title="Take a new photo with the camera">';
+  html += '<div class="add-icon"><span class="ico">&#128247;</span><span>Take Photo</span></div>';
+  html += '<input type="file" accept="image/*" capture="environment" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="addGlobalPhoto(this)">';
+  html += '</label>';
+  html += '<label class="section-photo-tile" title="Pick from photo library">';
+  html += '<div class="add-icon"><span class="ico">&#128194;</span><span>From Library</span></div>';
+  html += '<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="addGlobalPhoto(this)">';
+  html += '</label>';
+  host.innerHTML = html;
+}
+
+function addGlobalPhoto(input) {
+  var files = Array.from(input.files || []);
+  if (!files.length) return;
+  var pending = files.length;
+  files.forEach(function(file) {
+    compressImage(file, 1280, 0.7).then(function(dataUrl) {
+      var defaultLabel = file.name.replace(/\.[^.]+$/, "").slice(0, 24);
+      var label = window.prompt("Label for this photo (e.g. Rack front, AP Living Room):", defaultLabel) || "";
+      var record = { id: "ph_" + Math.random().toString(36).slice(2,9), label: label.trim(), data: dataUrl };
+      GLOBAL_PHOTOS.push(record);
+      photoDbPut(record);
+      pending--;
+      if (pending === 0) renderGlobalPhotos();
+    }).catch(function() { pending--; if (pending === 0) renderGlobalPhotos(); });
+  });
+  input.value = "";
+}
+
+function removeGlobalPhoto(photoId) {
+  GLOBAL_PHOTOS = GLOBAL_PHOTOS.filter(function(p) { return p.id !== photoId; });
+  photoDbDelete(photoId);
+  renderGlobalPhotos();
+}
+
+function compressImage(file, maxDim, quality) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onerror = function() { reject(new Error("read failed")); };
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var w = img.width, h = img.height;
+        var md = maxDim || 1280;
+        if (w > md || h > md) {
+          if (w > h) { h = Math.round(h * md / w); w = md; }
+          else { w = Math.round(w * md / h); h = md; }
+        }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        try { resolve(canvas.toDataURL("image/jpeg", quality || 0.7)); } catch(err) { reject(err); }
+      };
+      img.onerror = function() { reject(new Error("decode failed")); };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------- ENHANCE EACH CATEGORY SECTION ----------
+// Adds a Recommendations block and a Photos block inside each card-body.
+var SECTION_KEYS = [
+  { key: "network",         label: "Network" },
+  { key: "audio-video",     label: "Audio / Video" },
+  { key: "control-systems", label: "Control Systems" },
+  { key: "lighting-controls", label: "Lighting Controls" },
+  { key: "shading",         label: "Shading" },
+  { key: "security-cameras", label: "Security / Cameras" },
+  { key: "alarm-system",    label: "Alarm System" }
+];
+function enhanceSections() {
+  // Inject section-header badges and a "Mark all N/A" button next to the
+  // RAG legend for each section's main checklist.
+  SECTION_KEYS.forEach(function(s) {
+    var body = document.getElementById("body-" + s.key);
+    if (!body) return;
+    var card = body.parentElement;
+    var hdr = card ? card.querySelector(".card-header") : null;
+    if (hdr && !hdr.querySelector("[data-badges='" + s.key + "']")) {
+      var toggleBtn = hdr.querySelector(".section-toggle");
+      var badges = document.createElement("div");
+      badges.className = "section-badges";
+      badges.setAttribute("data-badges", s.key);
+      if (toggleBtn) hdr.insertBefore(badges, toggleBtn);
+      else hdr.appendChild(badges);
+    }
+    // Mark all N/A button injected into the rag legend
+    var legend = body.querySelector(".rag-legend");
+    var checklistId = sectionChecklistId(s.key);
+    if (legend && checklistId && !legend.querySelector(".mark-na-btn")) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "mark-na-btn";
+      btn.textContent = "Mark all N/A";
+      btn.title = "Set every row that has not been marked yet to N/A";
+      btn.setAttribute("data-checklist", checklistId);
+      btn.onclick = function() { markAllNA(checklistId); };
+      legend.appendChild(btn);
+    }
+  });
+}
+
+function sectionChecklistId(key) {
+  if (key === "audio-video") return "avChecklist";
+  if (key === "control-systems") return "csChecklist";
+  if (key === "lighting-controls") return "lightingChecklist";
+  if (key === "shading") return "shadingChecklist";
+  if (key === "security-cameras") return "securityChecklist";
+  if (key === "alarm-system") return "alarmChecklist";
+  if (key === "network") return "networkChecklist";
+  return null;
+}
+
+// Bulk-set every row in a checklist that has no active rag-btn to N/A.
+function markAllNA(checklistId) {
+  var rows = document.querySelectorAll("#" + checklistId + " tbody tr");
+  var changed = 0;
+  rows.forEach(function(row) {
+    if (row.querySelector(".rag-btn.active")) return;
+    var na = row.querySelector(".rag-btn.na-btn");
+    if (na) { na.classList.add("active"); changed++; }
+  });
+  if (changed > 0) {
+    updateHealthSummary();
+    updateSectionBadges();
+    saveDraft();
+    toast(changed + " row" + (changed === 1 ? "" : "s") + " marked N/A.", "success");
+  } else {
+    toast("No untouched rows to mark.", "");
+  }
+}
+
+function updateSectionBadges() {
+  SECTION_KEYS.forEach(function(s) {
+    var holder = document.querySelector("[data-badges='" + s.key + "']");
+    if (!holder) return;
+    var checklistId = (
+      s.key === "audio-video" ? "avChecklist" :
+      s.key === "control-systems" ? "csChecklist" :
+      s.key === "lighting-controls" ? "lightingChecklist" :
+      s.key === "shading" ? "shadingChecklist" :
+      s.key === "security-cameras" ? "securityChecklist" :
+      s.key === "alarm-system" ? "alarmChecklist" :
+      "networkChecklist"
+    );
+    var g = 0, y = 0, r = 0;
+    document.querySelectorAll("#" + checklistId + " .rag-btn.active").forEach(function(b) {
+      var c = b.getAttribute("data-color");
+      if (c === "green") g++;
+      else if (c === "yellow") y++;
+      else if (c === "red") r++;
+    });
+    // Notes-present dot: check the client and internal note fields for this section
+    var notesIdMap = {
+      "network": ["networkNotesClient", "networkUpdates"],
+      "audio-video": ["avNotesClient", "avUpdates"],
+      "control-systems": ["csNotesClient", "csUpdates"],
+      "lighting-controls": ["lightingNotesClient", "lightingUpdates"],
+      "shading": ["shadingNotesClient", "shadingUpdates"],
+      "security-cameras": ["securityNotesClient", "securityUpdates"],
+      "alarm-system": ["alarmNotesClient", "alarmUpdates"]
+    };
+    var hasNotes = false;
+    (notesIdMap[s.key] || []).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.value && el.value.trim()) hasNotes = true;
+    });
+    var html = "";
+    if (g) html += '<span class="sbadge green" title="Verified">' + g + ' &#10003;</span>';
+    if (y) html += '<span class="sbadge yellow" title="Needs Attention">' + y + ' !</span>';
+    if (r) html += '<span class="sbadge red" title="Requires Service">' + r + ' &#9888;</span>';
+    if (hasNotes) html += '<span class="sbadge" title="Notes present">&bull; notes</span>';
+    holder.innerHTML = html;
+  });
+}
+
+// ---------- SECTION PROGRESS ----------
+// Sections we track: 7 main sections + Documentation + Functional Testing.
+// A section counts as complete if it is collapsed (Not in Scope) OR has any
+// active RAG marks OR has any client/internal notes.
+function updateProgress() {
+  var sections = [
+    { key: "network",          checklistId: "networkChecklist",  notes: ["networkNotesClient", "networkUpdates"] },
+    { key: "audio-video",      checklistId: "avChecklist",       notes: ["avNotesClient", "avUpdates"] },
+    { key: "control-systems",  checklistId: "csChecklist",       notes: ["csNotesClient", "csUpdates"] },
+    { key: "lighting-controls",checklistId: "lightingChecklist", notes: ["lightingNotesClient", "lightingUpdates"] },
+    { key: "shading",          checklistId: "shadingChecklist",  notes: ["shadingNotesClient", "shadingUpdates"] },
+    { key: "security-cameras", checklistId: "securityChecklist", notes: ["securityNotesClient", "securityUpdates"] },
+    { key: "alarm-system",     checklistId: "alarmChecklist",    notes: ["alarmNotesClient", "alarmUpdates"] },
+    { key: "_doc",  checklistId: "docChecklist",  notes: ["docNotesClient", "docUpdates"] },
+    { key: "_func", checklistId: "funcChecklist", notes: ["funcNotesClient", "funcUpdates"] }
+  ];
+  var done = 0;
+  sections.forEach(function(s) {
+    var body = document.getElementById("body-" + s.key);
+    if (body && body.classList.contains("collapsed")) { done++; return; }
+    var rags = document.querySelectorAll("#" + s.checklistId + " .rag-btn.active");
+    if (rags.length) { done++; return; }
+    var hasNotes = s.notes.some(function(id) {
+      var el = document.getElementById(id);
+      return el && el.value && el.value.trim();
+    });
+    if (hasNotes) done++;
+  });
+  var strip = document.getElementById("progressStrip");
+  var label = document.getElementById("progressLabel");
+  var fill = document.getElementById("progressFill");
+  if (!strip || !label || !fill) return;
+  // Only show the strip once a tech starts engaging; hide on an empty form
+  if (done === 0 && !((document.getElementById("clientName") || {}).value || "").trim()) {
+    strip.style.display = "none";
+    return;
+  }
+  strip.style.display = "flex";
+  var pct = Math.round((done / sections.length) * 100);
+  label.textContent = done + " / " + sections.length + " sections";
+  fill.style.width = pct + "%";
+  if (done === sections.length) {
+    fill.style.background = "linear-gradient(90deg, var(--green) 0%, var(--navy) 100%)";
+  } else {
+    fill.style.background = "var(--green)";
+  }
+}
+
+// ---------- CALENDAR .ICS DOWNLOAD ----------
+// Build an iCalendar file for the Next Recommended Tune Up date and trigger
+// a download. Default: 09:00 to 11:00 local on the chosen date.
+function exportNextTuneUpIcs() {
+  var dateVal = (document.getElementById("nextTuneupDate") || {}).value || "";
+  if (!dateVal) {
+    toast("No Next Recommended date set yet.", "error");
+    return;
+  }
+  var client = (document.getElementById("clientName") || {}).value || "Client";
+  var addr1 = (document.getElementById("address1") || {}).value || "";
+  var city = (document.getElementById("city") || {}).value || "";
+  var state = (document.getElementById("state") || {}).value || "";
+  var zip = (document.getElementById("zip") || {}).value || "";
+  var addrLine = [addr1, [city, state, zip].filter(Boolean).join(" ").trim()].filter(Boolean).join(", ");
+  var tier = (document.getElementById("membershipBadgeDisplay") || {}).textContent || "";
+  if (tier === "Select Below") tier = "";
+
+  // Parse YYYY-MM-DD as local date so .ics times line up with the user
+  var parts = dateVal.split("-");
+  if (parts.length !== 3) { toast("Invalid date.", "error"); return; }
+  var y = parts[0], m = parts[1], d = parts[2];
+  function pad(n) { return String(n).padStart(2, "0"); }
+  // 09:00 - 11:00 local
+  var dtstart = y + m + d + "T090000";
+  var dtend = y + m + d + "T110000";
+  var nowDt = new Date();
+  var nowStamp = nowDt.getUTCFullYear() +
+    pad(nowDt.getUTCMonth() + 1) + pad(nowDt.getUTCDate()) + "T" +
+    pad(nowDt.getUTCHours()) + pad(nowDt.getUTCMinutes()) + pad(nowDt.getUTCSeconds()) + "Z";
+  var uid = "tuneup-" + y + m + d + "-" + Math.random().toString(36).slice(2, 9) + "@captivatetx.com";
+  var summary = "Captivate Tune Up -- " + client;
+  var descParts = ["Recommended next tune up for " + client + "."];
+  if (tier) descParts.push("Membership: " + tier);
+  descParts.push("Adjust the time when scheduling with the client.");
+  var description = descParts.join("\\n");
+
+  function fold(line) {
+    // RFC 5545: lines should not exceed 75 octets, wrap with CRLF + space
+    if (line.length <= 73) return line;
+    var out = "";
+    var i = 0;
+    while (i < line.length) {
+      var chunk = line.substr(i, i === 0 ? 73 : 72);
+      out += (i === 0 ? "" : "\r\n ") + chunk;
+      i += chunk.length;
+    }
+    return out;
+  }
+
+  var lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Captivate//Field Tune Up//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    "UID:" + uid,
+    "DTSTAMP:" + nowStamp,
+    "DTSTART:" + dtstart,
+    "DTEND:" + dtend,
+    "SUMMARY:" + summary.replace(/,/g, "\\,").replace(/;/g, "\\;"),
+    "DESCRIPTION:" + description.replace(/,/g, "\\,").replace(/;/g, "\\;"),
+    addrLine ? "LOCATION:" + addrLine.replace(/,/g, "\\,").replace(/;/g, "\\;") : "",
+    "STATUS:TENTATIVE",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].filter(Boolean).map(fold);
+
+  var blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "captivate-tuneup-" + (client.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "client") + "-" + y + m + d + ".ics";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  toast("Calendar event downloaded. Open it to add to your calendar.", "success");
+}
+
+// ---------- SLACK INCOMING WEBHOOK ----------
+// Per-device Slack webhook URL. Prompt on first use, store in localStorage.
+// Use buildSlackMessage() to construct the same text used by Copy for Slack.
+var SLACK_KEY = "captivate-field-slack-webhook";
+function getSlackWebhook() {
+  try { return localStorage.getItem(SLACK_KEY) || ""; } catch (e) { return ""; }
+}
+function setSlackWebhook(url) {
+  try { localStorage.setItem(SLACK_KEY, url); } catch (e) {}
+}
+function resetSlackWebhook() {
+  var current = getSlackWebhook();
+  var prompt = current
+    ? "Update the Slack webhook URL.\n\nCurrent: " + current
+    : "Paste the Slack Incoming Webhook URL.\n\nGet one at api.slack.com/apps -> Incoming Webhooks. Example:\nhttps://hooks.slack.com/services/T0000/B0000/XXXX";
+  var url = window.prompt(prompt, current);
+  if (url === null) return;
+  url = url.trim();
+  if (url && !/^https:\/\/hooks\.slack\.com\/services\//.test(url)) {
+    if (!confirm("That does not look like a Slack webhook URL. Save anyway?")) return;
+  }
+  setSlackWebhook(url);
+  if (!url) toast("Slack webhook cleared.");
+  else toast("Slack webhook saved on this device.", "success");
+}
+
+function sendToSlack() {
+  var url = getSlackWebhook();
+  if (!url) {
+    resetSlackWebhook();
+    url = getSlackWebhook();
+    if (!url) return; // user cancelled
+  }
+  var msg = buildSlackMessage();
+  toast("Posting to Slack...");
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ text: msg })
+    // intentionally no Content-Type header to avoid a CORS preflight
+    // (Slack accepts text/plain bodies as JSON for incoming webhooks)
+  }).then(function(res) {
+    if (res.ok) {
+      toast("Posted to Slack.", "success");
+      logCurrentVisit("slack-webhook");
+    } else {
+      toast("Slack post failed (status " + res.status + "). Copying to clipboard.", "error", 4000);
+      copyToClipboard(msg, "Slack summary copied to clipboard. Paste into the channel.");
+    }
+  }).catch(function(err) {
+    toast("Slack post failed. Copying to clipboard.", "error", 4000);
+    copyToClipboard(msg, "Slack summary copied to clipboard. Paste into the channel.");
+  });
+}
+
+// Builds the Slack message body. Used by both Copy and Send-to-channel paths.
+function buildSlackMessage() {
+  return exportSummary(true);
+}
+
+function exportSummary(returnOnly) {
+  var client = document.getElementById("clientName").value || "[Client Name]";
+  var tech = document.getElementById("techName").value || "[Tech]";
+  var tech2 = document.getElementById("techName2").value;
+  var techDisplay = tech2 ? tech + " & " + tech2 : tech;
+  var market = (document.getElementById("market") || {}).value || "";
+  var date = document.getElementById("tuneupDate").value || new Date().toLocaleDateString();
+  var nextDate = document.getElementById("nextTuneupDate").value || "";
+  var tier = document.getElementById("membershipBadgeDisplay").textContent;
+  var rec = document.getElementById("recommendations").value || "";
+  var rebootDate = document.getElementById("lastRouterReboot").value || "";
+  var allRed = document.querySelectorAll(".checklist .rag-btn.active[data-color=red]");
+  var allYellow = document.querySelectorAll(".checklist .rag-btn.active[data-color=yellow]");
+  var greenCount = document.querySelectorAll(".checklist .rag-btn.active[data-color=green]").length;
+  var clientRed = [], clientYellow = [], internalRed = [], internalYellow = [];
+  allRed.forEach(function(b) {
+    var label = ":red_circle: " + (b.getAttribute("data-label") || "Item");
+    if (b.getAttribute("data-internal")) internalRed.push(label);
+    else clientRed.push(label);
+  });
+  allYellow.forEach(function(b) {
+    var label = ":large_yellow_circle: " + (b.getAttribute("data-label") || "Item");
+    if (b.getAttribute("data-internal")) internalYellow.push(label);
+    else clientYellow.push(label);
+  });
+  // Client notes by section
+  var clientNoteSections = [
+    {id:"networkNotesClient",  label:"Network"},
+    {id:"avNotesClient",       label:"Audio/Video"},
+    {id:"csNotesClient",       label:"Control Systems"},
+    {id:"lightingNotesClient", label:"Lighting"},
+    {id:"shadingNotesClient",  label:"Shading"},
+    {id:"securityNotesClient", label:"Security Cameras"},
+    {id:"alarmNotesClient",    label:"Alarm System"},
+    {id:"docNotesClient",      label:"Documentation"},
+    {id:"funcNotesClient",     label:"Functionality"}
+  ];
+  var clientNotes = [];
+  clientNoteSections.forEach(function(s) {
+    var el = document.getElementById(s.id);
+    if (el && el.value.trim()) clientNotes.push("*" + s.label + ":* " + el.value.trim());
+  });
+  // Internal action items by section
+  var actionSections = [
+    {id:"networkUpdates",   label:"Network"},
+    {id:"avUpdates",        label:"Audio/Video"},
+    {id:"csUpdates",        label:"Control Systems"},
+    {id:"lightingUpdates",  label:"Lighting"},
+    {id:"shadingUpdates",   label:"Shading"},
+    {id:"securityUpdates",  label:"Security Cameras"},
+    {id:"alarmUpdates",     label:"Alarm System"},
+    {id:"docUpdates",       label:"Documentation"},
+    {id:"funcUpdates",      label:"Functional Testing"},
+  ];
+  var actionItems = [];
+  actionSections.forEach(function(s) {
+    var el = document.getElementById(s.id);
+    if (el && el.value.trim()) actionItems.push("*" + s.label + ":* " + el.value.trim());
+  });
+  var csmName = (document.getElementById("csmName") || {}).value || "";
+  var tierDisplay = (tier && tier !== "Select Below") ? tier : "Not selected";
+  // Build message
+  var msg = "*Captivate Field Tune Up -- " + client + "*\n";
+  msg += "Date: " + date + "\n";
+  if (nextDate) msg += "Next Recommended: " + nextDate + "\n";
+  msg += "Tech: " + techDisplay + "\n";
+  if (market) msg += "Market: " + market + "\n";
+  if (csmName) msg += "CSM: " + csmName + "\n";
+  msg += "Tier: " + tierDisplay + "\n";
+  // Uptime
+  if (rebootDate) {
+    var then = new Date(rebootDate + "T00:00:00");
+    var days = Math.floor((new Date() - then) / 86400000);
+    var months = Math.floor(days / 30);
+    var uptimeStr = months > 0 ? months + " month" + (months > 1 ? "s" : "") + " of uptime" : days + " days of uptime";
+    msg += "Router Uptime: :white_check_mark: " + uptimeStr + "\n";
+  }
+  msg += "\n";
+  msg += "*System Health:*\n";
+  msg += ":white_check_mark: " + greenCount + " Verified\n";
+  if ((clientYellow.length + internalYellow.length)) msg += ":warning: " + (clientYellow.length + internalYellow.length) + " Needs Attention\n";
+  if ((clientRed.length + internalRed.length)) msg += ":rotating_light: " + (clientRed.length + internalRed.length) + " Requires Service\n";
+  msg += "\n";
+  // CLIENT SECTION
+  msg += "*--- CLIENT REPORT (review before sending) ---*\n";
+  if (clientRed.length) { msg += "*Requires Service:*\n" + clientRed.join("\n") + "\n"; }
+  if (clientYellow.length) { msg += "*Needs Attention:*\n" + clientYellow.join("\n") + "\n"; }
+  if (clientNotes.length) { msg += "*Notes:*\n" + clientNotes.join("\n") + "\n"; }
+  if (!clientRed.length && !clientYellow.length && !clientNotes.length) {
+    msg += ":white_check_mark: No client-facing issues or notes\n";
+  }
+  msg += "\n";
+  // INTERNAL SECTION
+  msg += "*--- INTERNAL (not shared with client) ---*\n";
+  if (internalRed.length) { msg += "*Requires Service:*\n" + internalRed.join("\n") + "\n"; }
+  if (internalYellow.length) { msg += "*Needs Attention:*\n" + internalYellow.join("\n") + "\n"; }
+  if (actionItems.length) { msg += "*Action Items:*\n" + actionItems.join("\n") + "\n"; }
+  if (!internalRed.length && !internalYellow.length && !actionItems.length) {
+    msg += ":white_check_mark: No internal flags or action items\n";
+  }
+  msg += "\n";
+  if (rec) { msg += "*Tech Recommendations:*\n" + rec + "\n\n"; }
+  if (GLOBAL_PHOTOS && GLOBAL_PHOTOS.length) {
+    msg += "_" + GLOBAL_PHOTOS.length + " photo" + (GLOBAL_PHOTOS.length === 1 ? "" : "s") + " on the printed report._\n\n";
+  }
+  // Service quote framing for non-members with red items. Per Captivate
+  // standard intro, framed for the CSM to react to before sending.
+  var redCount = (clientRed.length + internalRed.length);
+  if (tierDisplay === "Standard" && redCount > 0) {
+    msg += "\n*--- SERVICE QUOTE FRAMING (CSM heads-up) ---*\n";
+    msg += "This service quote involves supplying the necessary components and labor to resolve the current issue, or complete the project. The equipment is itemized; any changes in equipment will be documented, reported, and approved as they arise. The installation, programming, design and management labor will be billed at $150 per hour per technician.\n";
+    msg += "_Standard tier + " + redCount + " service item" + (redCount === 1 ? "" : "s") + ". Build a Scope of Work using the items flagged above._\n\n";
+  }
+  msg += "_-- Captivate Elevated Home Technology_";
+  if (returnOnly) return msg;
+  copyToClipboard(msg, "Slack summary copied to clipboard. Paste directly into your Slack channel.");
+  logCurrentVisit("slack");
+}
+
+// Builds a plain-text version of the field-print summary for emailing.
+function buildEmailBody() {
+  var v = function(id) {
+    var e = document.getElementById(id);
+    if (!e) return "";
+    if (e.tagName === "INPUT" || e.tagName === "TEXTAREA" || e.tagName === "SELECT") return (e.value || "").trim();
+    return (e.textContent || "").trim();
+  };
+  var lines = [];
+  var client = v("clientName") || "Unnamed Client";
+  var tech = v("techName"), tech2 = v("techName2");
+  var techDisplay = tech2 ? tech + " & " + tech2 : tech;
+  var market = v("market");
+  var date = v("tuneupDate"), prev = v("prevTuneupDate"), next = v("nextTuneupDate");
+  var addr1 = v("address1"), addr2 = v("address2");
+  var city = v("city"), st = v("state"), zip = v("zip");
+  var tier = v("membershipBadgeDisplay"); if (tier === "Select Below") tier = "";
+  var reboot = v("lastRouterReboot");
+
+  lines.push("Captivate Field Tune Up -- " + client);
+  lines.push("");
+  var addrLine = [addr1, addr2].filter(Boolean).join(", ");
+  var cityLine = [city, st, zip].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  if (addrLine || cityLine) lines.push("Property: " + [addrLine, cityLine].filter(Boolean).join(" -- "));
+  var csm = v("csmName");
+  if (techDisplay) lines.push("Lead Tech: " + techDisplay);
+  if (market) lines.push("Market: " + market);
+  if (csm) lines.push("CSM: " + csm);
+  if (tier && tier !== "Select Below") lines.push("Membership: " + tier);
+  if (date) lines.push("Tune Up Date: " + date);
+  if (prev) lines.push("Previous: " + prev);
+  if (next) lines.push("Next Recommended: " + next);
+  if (reboot) {
+    var rt = new Date(reboot + "T00:00:00");
+    var days = Math.floor((new Date() - rt) / 86400000);
+    var months = Math.floor(days / 30);
+    var ut = months > 0 ? months + " month" + (months > 1 ? "s" : "") + " of router uptime" : days + " days of router uptime";
+    lines.push("Router: " + ut);
+  }
+
+  // Health
+  var counts = (typeof computeFieldCounts === "function") ? computeFieldCounts() : { g:0, y:0, r:0 };
+  lines.push("");
+  lines.push("System Health: " + counts.g + " Verified, " + counts.y + " Needs Attention, " + counts.r + " Requires Service");
+
+  var sectionMap = [
+    { key: "network",          label: "Network",            checklistId: "networkChecklist",  notesId: "networkNotesClient" },
+    { key: "audio-video",      label: "Audio / Video",      checklistId: "avChecklist",       notesId: "avNotesClient" },
+    { key: "control-systems",  label: "Control Systems",    checklistId: "csChecklist",       notesId: "csNotesClient" },
+    { key: "lighting-controls", label: "Lighting Controls", checklistId: "lightingChecklist", notesId: "lightingNotesClient" },
+    { key: "shading",          label: "Shading",            checklistId: "shadingChecklist",  notesId: "shadingNotesClient" },
+    { key: "security-cameras", label: "Security / Cameras", checklistId: "securityChecklist", notesId: "securityNotesClient" },
+    { key: "alarm-system",     label: "Alarm System",       checklistId: "alarmChecklist",    notesId: "alarmNotesClient" }
+  ];
+  sectionMap.forEach(function(s) {
+    var body = document.getElementById("body-" + s.key);
+    if (body && body.classList.contains("collapsed")) return;
+    var flagged = [];
+    document.querySelectorAll("#" + s.checklistId + " .rag-btn.active").forEach(function(b) {
+      if (b.getAttribute("data-internal")) return;
+      var c = b.getAttribute("data-color");
+      if (c === "red" || c === "yellow") {
+        var label = (b.getAttribute("data-label") || "").replace(/^\[[^\]]+\]\s*/, "");
+        flagged.push({ color: c, label: label });
+      }
+    });
+    var notes = (document.getElementById(s.notesId) || {}).value || "";
+    if (!flagged.length && !notes.trim()) return;
+    lines.push("");
+    lines.push(s.label.toUpperCase());
+    if (notes.trim()) {
+      lines.push("Notes: " + notes.trim().replace(/\s+/g, " "));
+    }
+    if (flagged.length) {
+      flagged.sort(function(a,b){ return a.color === "red" ? -1 : 1; });
+      lines.push("Findings:");
+      flagged.forEach(function(f) {
+        lines.push("  - [" + (f.color === "red" ? "Service" : "Attention") + "] " + f.label);
+      });
+    }
+  });
+  if (GLOBAL_PHOTOS.length) {
+    lines.push("");
+    lines.push("Photos: " + GLOBAL_PHOTOS.length + " attached on the printed report");
+  }
+
+  // WiFi
+  var wifiRows = [];
+  document.querySelectorAll("#wifiBody tr").forEach(function(row) {
+    var inputs = row.querySelectorAll("input");
+    if (!inputs.length) return;
+    var loc = (inputs[0] && inputs[0].value || "").trim();
+    var dl = (inputs[1] && inputs[1].value || "").trim();
+    var ul = (inputs[2] && inputs[2].value || "").trim();
+    var sigBtn = row.querySelector(".rag-btn.active");
+    var sig = "";
+    if (sigBtn) {
+      if (sigBtn.classList.contains("green")) sig = "Strong";
+      else if (sigBtn.classList.contains("yellow")) sig = "Weak";
+      else if (sigBtn.classList.contains("red")) sig = "No Signal";
+    }
+    if (loc || dl || ul || sig) wifiRows.push({ loc: loc, dl: dl, ul: ul, sig: sig });
+  });
+  if (wifiRows.length) {
+    lines.push("");
+    lines.push("WIFI SPEED TESTS");
+    wifiRows.forEach(function(w) {
+      var bits = [];
+      bits.push(w.loc || "Unlabeled");
+      if (w.dl) bits.push(w.dl + " Mbps down");
+      if (w.ul) bits.push(w.ul + " Mbps up");
+      if (w.sig) bits.push(w.sig + " signal");
+      lines.push("  - " + bits.join(" -- "));
+    });
+  }
+
+  // Tech recommendations
+  var rec = (document.getElementById("recommendations") || {}).value || "";
+  if (rec.trim()) {
+    lines.push("");
+    lines.push("TECH RECOMMENDATIONS");
+    lines.push(rec.trim());
+  }
+
+  // Service quote framing when a Standard-tier (non-member) client has Red items
+  if (tier === "Standard" && counts && counts.r > 0) {
+    lines.push("");
+    lines.push("SERVICE QUOTE FRAMING (CSM heads-up)");
+    lines.push("This service quote involves supplying the necessary components and labor to resolve the current issue, or complete the project. The equipment is itemized; any changes in equipment will be documented, reported, and approved as they arise. The installation, programming, design and management labor will be billed at $150 per hour per technician.");
+    lines.push("Standard tier + " + counts.r + " service item" + (counts.r === 1 ? "" : "s") + ". Build a Scope of Work using the items flagged above.");
+  }
+
+  lines.push("");
+  lines.push("-- Captivate Elevated Home Technology");
+  return lines.join("\n");
+}
+
+function emailRecipient() {
+  // Prefer the selected CSM. Fall back to a client email if one has been
+  // captured. Empty string is fine -- mailto works without a recipient.
+  var csm = (document.getElementById("csmName") || {}).value || "";
+  if (csm) return csmEmailFor(csm);
+  return (document.getElementById("clientEmail") || {}).value || "";
+}
+
+function emailSubject() {
+  var client = (document.getElementById("clientName") || {}).value || "Client";
+  var date = (document.getElementById("tuneupDate") || {}).value || "";
+  return "Captivate Field Tune Up -- " + client + (date ? " (" + date + ")" : "");
+}
+
+function buildMailtoUrl(to, subject, body) {
+  return "mailto:" + encodeURIComponent(to) +
+    "?subject=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(body);
+}
+
+function exportEmail() {
+  var to = emailRecipient();
+  var subject = emailSubject();
+  var body = buildEmailBody();
+  var url = buildMailtoUrl(to, subject, body);
+  // Some mail clients cap mailto length around 2000 chars. If the body is
+  // long, copy it to clipboard and open a blank mailto so the user can paste.
+  if (url.length > 1900) {
+    copyToClipboard(body, "Email body copied to clipboard. Paste it into your email after it opens.");
+    var blankUrl = "mailto:" + encodeURIComponent(to) + "?subject=" + encodeURIComponent(subject);
+    setTimeout(function() { window.location.href = blankUrl; }, 200);
+    logCurrentVisit("email");
+    return;
+  }
+  window.location.href = url;
+  logCurrentVisit("email");
+}
+
+// PDF + Email flow, simplified.
+// Two explicit steps so it works reliably on iPad Safari (where afterprint
+// is unreliable). Step 1 prints. Step 2, when the tech taps "Email CSM"
+// after saving the PDF, opens Mail with the report in the body and the
+// reminder to attach the saved PDF.
+var pendingPdfEmail = false;
+function exportPdfAndEmail() {
+  var to = emailRecipient();
+  if (!to) {
+    if (!confirm("No CSM selected. Continue without a recipient?")) return;
+  }
+  buildFieldPrint();
+  pendingPdfEmail = true;
+  toast("Save the PDF first. Tap Email CSM after.", "", 4000);
+  // Reveal the secondary Email CSM button
+  var btn = document.getElementById("emailCsmAfterPdfBtn");
+  if (btn) btn.style.display = "inline-flex";
+  // Defer print one tick so the toast paints first
+  setTimeout(function() { window.print(); }, 50);
+}
+
+function logPrintVisit() { logCurrentVisit("print"); }
+
+function emailCsmAfterPdf() {
+  var to = emailRecipient();
+  var subject = emailSubject();
+  var body =
+    "Hi " + ((document.getElementById("csmName") || {}).value || "team") + ",\n\n" +
+    "Attached is the Captivate Field Tune Up report. Please open the saved PDF and attach it to this email before sending.\n\n" +
+    "----- Report Summary -----\n" +
+    buildEmailBody();
+  var url = buildMailtoUrl(to, subject, body);
+  if (url.length > 1900) {
+    copyToClipboard(body, "Report copied to clipboard. Paste it in Mail and attach the saved PDF.");
+    var blankUrl = "mailto:" + encodeURIComponent(to) + "?subject=" + encodeURIComponent(subject);
+    setTimeout(function() { window.location.href = blankUrl; }, 200);
+  } else {
+    window.location.href = url;
+  }
+  // Hide the secondary button after use
+  var btn = document.getElementById("emailCsmAfterPdfBtn");
+  if (btn) btn.style.display = "none";
+  pendingPdfEmail = false;
+}
+
+function copyToClipboard(text, successMsg) {
+  function legacyCopy() {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (ok) {
+        toast(successMsg, "success");
+      } else {
+        promptManualCopy(text);
+      }
+    } catch (e) {
+      promptManualCopy(text);
+    }
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(function() {
+      toast(successMsg, "success");
+    }).catch(function() {
+      legacyCopy();
+    });
+  } else {
+    legacyCopy();
+  }
+}
+
+function promptManualCopy(text) {
+  // Last resort: open a window so the tech can manually copy
+  window.prompt("Copy failed. Select all and copy manually:", text);
+}
+
+function clearForm() {
+  if (!confirm("Clear all form data? This cannot be undone.")) return;
+  __restoring = true;
+  try {
+    document.querySelectorAll("input[type=text], input[type=number], input[type=date], textarea").forEach(function(el) { el.value = ""; });
+    document.querySelectorAll("select").forEach(function(el) { el.value = ""; });
+    document.querySelectorAll(".rag-btn.active").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll(".mem-btn.active").forEach(function(b) { b.classList.remove("active"); });
+    // Reset all section toggles
+    document.querySelectorAll(".section-toggle").forEach(function(btn) {
+      btn.innerHTML = "&#8226; In Scope";
+      btn.classList.remove("hidden-state");
+    });
+    document.querySelectorAll(".card-body").forEach(function(b) { b.classList.remove("collapsed"); });
+    document.querySelectorAll(".not-in-scope").forEach(function(b) { b.classList.remove("visible"); });
+    document.getElementById("membershipBadgeDisplay").textContent = "Select Below";
+    document.getElementById("membershipStatus").style.display = "none";
+    document.getElementById("membershipStatus").innerHTML = "";
+    document.getElementById("lastRouterReboot").value = "";
+    document.getElementById("uptimeDisplay").innerHTML = "";
+    document.getElementById("healthPositiveNote").style.display = "none";
+    var tbody = document.getElementById("wifiBody");
+    while (tbody.rows.length > 1) tbody.deleteRow(1);
+    // Wipe global photo gallery (both memory and IndexedDB)
+    GLOBAL_PHOTOS = [];
+    photoDbClear();
+    renderGlobalPhotos();
+    splashState = { tech: null, market: null };
+    setDefaults();
+    updateHealthSummary();
+    onTechMarketChange();
+  } finally {
+    __restoring = false;
+  }
+  clearDraft();
+  reopenSplash();
+}
+
+function setDefaults() {
+  var today = new Date().toISOString().split("T")[0];
+  var tu = document.getElementById("tuneupDate");
+  var so = document.getElementById("signoffDate");
+  if (tu && !tu.value) tu.value = today;
+  if (so && !so.value) so.value = today;
+  updateNextTuneupDate();
+}
+
+function updateNextTuneupDate() {
+  var v = document.getElementById("tuneupDate").value;
+  var el = document.getElementById("nextTuneupDate");
+  if (!v || !el) return;
+  // Parse YYYY-MM-DD as a local date to avoid UTC->local day shift
+  var parts = v.split("-");
+  var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+  d.setMonth(d.getMonth() + 6);
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, "0");
+  var day = String(d.getDate()).padStart(2, "0");
+  el.value = y + "-" + m + "-" + day;
+  saveDraft();
+}
+
+function updateUptimeDisplay() {
+  var v = document.getElementById("lastRouterReboot").value;
+  var el = document.getElementById("uptimeDisplay");
+  if (!v || !el) { if (el) el.innerHTML = ""; return; }
+  var then = new Date(v + "T00:00:00");
+  var now = new Date();
+  var days = Math.floor((now - then) / 86400000);
+  var months = Math.floor(days / 30);
+  var msg, icon;
+  if (days < 7) { msg = days + " days since last reboot -- keep an eye on it"; icon = "&#128337;"; }
+  else if (days < 30) { msg = days + " days of uptime -- running well"; icon = "&#128994;"; }
+  else if (days < 90) { msg = days + " days of uptime -- solid stability"; icon = "&#129395;"; }
+  else { msg = months + " months of uptime -- great work, system is rock solid!"; icon = "&#127881;"; }
+  el.innerHTML = "<span style='color:#2d5a00;font-weight:700;'>" + icon + "&nbsp;" + msg + "</span>";
+  saveDraft();
+}
+
+// ---- AUTOSAVE (silent, localStorage) ----
+var STORAGE_KEY = "captivate-field-tune-up-draft-v1";
+var __restoring = false;
+var __saveTimer = null;
+
+function saveDraft() {
+  if (__restoring) return;
+  if (__saveTimer) clearTimeout(__saveTimer);
+  __saveTimer = setTimeout(function() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeForm()));
+      updateAutosaveStatus();
+    } catch (e) { /* storage may be full or unavailable; fail quiet */ }
+  }, 250);
+}
+
+function updateAutosaveStatus() {
+  var el = document.getElementById("autosaveStatus");
+  if (!el) return;
+  var now = new Date();
+  var hh = String(now.getHours()).padStart(2, "0");
+  var mm = String(now.getMinutes()).padStart(2, "0");
+  el.textContent = "Draft saved at " + hh + ":" + mm;
+  el.style.color = "#2d5a00";
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function serializeForm() {
+  var data = { fields: {}, rag: [], wifi: [], scopeCollapsed: [], membership: null, savedAt: new Date().toISOString() };
+  document.querySelectorAll("input[id], textarea[id], select[id]").forEach(function(el) {
+    if (el.type === "file") return;
+    if (el.id === "photoUpload") return;
+    data.fields[el.id] = el.value;
+  });
+  document.querySelectorAll(".checklist .rag-btn.active").forEach(function(btn) {
+    data.rag.push({
+      section: btn.getAttribute("data-section"),
+      item: btn.getAttribute("data-item"),
+      color: btn.getAttribute("data-color")
+    });
+  });
+  document.querySelectorAll("#wifiBody tr").forEach(function(row) {
+    var inputs = row.querySelectorAll("input");
+    if (!inputs.length) return;
+    var sigBtn = row.querySelector(".rag-btn.active");
+    var sig = "";
+    if (sigBtn) {
+      if (sigBtn.classList.contains("green")) sig = "green";
+      else if (sigBtn.classList.contains("yellow")) sig = "yellow";
+      else if (sigBtn.classList.contains("red")) sig = "red";
+    }
+    data.wifi.push({
+      location: inputs[0] ? inputs[0].value : "",
+      dl: inputs[1] ? inputs[1].value : "",
+      ul: inputs[2] ? inputs[2].value : "",
+      signal: sig
+    });
+  });
+  document.querySelectorAll(".card-body.collapsed").forEach(function(b) {
+    if (b.id) data.scopeCollapsed.push(b.id);
+  });
+  var memBtn = document.querySelector(".mem-btn.active");
+  if (memBtn) data.membership = memBtn.textContent.trim();
+  return data;
+}
+
+function restoreDraft() {
+  var raw;
+  try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { return; }
+  if (!raw) return;
+  var data;
+  try { data = JSON.parse(raw); } catch (e) { return; }
+  if (!data) return;
+  // Stale draft warning: if the saved draft is more than 24 hours old AND has
+  // a real client name on it, prompt the tech before silently restoring.
+  if (data.savedAt && data.fields && (data.fields.clientName || "").trim()) {
+    var ageMs = Date.now() - new Date(data.savedAt).getTime();
+    if (ageMs > 24 * 60 * 60 * 1000) {
+      var ago = friendlyAgoMs(ageMs);
+      var clientName = data.fields.clientName.trim();
+      var keep = confirm(
+        "Found a saved draft for \"" + clientName + "\" from " + ago + " ago.\n\n" +
+        "OK = resume that draft.\n" +
+        "Cancel = start fresh and clear it."
+      );
+      if (!keep) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        return;
+      }
+    }
+  }
+  __restoring = true;
+  try {
+    if (data.fields) {
+      Object.keys(data.fields).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && typeof data.fields[id] === "string") el.value = data.fields[id];
+      });
+    }
+    if (Array.isArray(data.wifi) && data.wifi.length) {
+      var tbody = document.getElementById("wifiBody");
+      while (tbody.rows.length > 0) tbody.deleteRow(0);
+      data.wifi.forEach(function(w) {
+        addWifiRow();
+        var row = tbody.rows[tbody.rows.length - 1];
+        var inputs = row.querySelectorAll("input");
+        if (inputs[0]) inputs[0].value = w.location || "";
+        if (inputs[1]) inputs[1].value = w.dl || "";
+        if (inputs[2]) inputs[2].value = w.ul || "";
+        if (w.signal) {
+          var b = row.querySelector(".rag-btn." + w.signal);
+          if (b) b.classList.add("active");
+        }
+      });
+      if (tbody.rows.length === 0) addWifiRow();
+    }
+    if (Array.isArray(data.rag) && data.rag.length) {
+      data.rag.forEach(function(r) {
+        if (!r || !r.section) return;
+        var sel = ".checklist .rag-btn[data-section='" + r.section + "'][data-item='" + r.item + "'][data-color='" + r.color + "']";
+        var btn = document.querySelector(sel);
+        if (btn) btn.classList.add("active");
+      });
+    }
+    if (Array.isArray(data.scopeCollapsed) && data.scopeCollapsed.length) {
+      data.scopeCollapsed.forEach(function(bodyId) {
+        var body = document.getElementById(bodyId);
+        if (!body) return;
+        var sectionId = bodyId.replace(/^body-/, "");
+        var banner = document.getElementById("scope-" + sectionId);
+        var btn = body.parentElement.querySelector(".section-toggle");
+        body.classList.add("collapsed");
+        if (banner) banner.classList.add("visible");
+        if (btn) {
+          btn.innerHTML = "&#8854; Not in Scope";
+          btn.classList.add("hidden-state");
+        }
+      });
+    }
+    if (data.membership) {
+      var memBtns = document.querySelectorAll(".mem-btn");
+      memBtns.forEach(function(b) {
+        if (b.textContent.trim() === data.membership) setMembership(b, data.membership);
+      });
+    }
+    updateUptimeDisplay();
+    updateHealthSummary();
+    if (typeof updateSectionBadges === "function") updateSectionBadges();
+    onTechMarketChange();
+    closeSplashIfReady();
+  } finally {
+    __restoring = false;
+  }
+}
+
+function wireAutosave() {
+  document.addEventListener("input", function(e) {
+    if (e.target && e.target.matches && e.target.matches("input, textarea, select")) {
+      saveDraft();
+      if (typeof updateSectionBadges === "function") updateSectionBadges();
+      if (typeof updateProgress === "function") updateProgress();
+    }
+  });
+  document.addEventListener("change", function(e) {
+    if (e.target && e.target.matches && e.target.matches("input, textarea, select")) {
+      saveDraft();
+      if (typeof updateSectionBadges === "function") updateSectionBadges();
+      if (typeof updateProgress === "function") updateProgress();
+    }
+  });
+}
+
+// ---- BOOTSTRAP ----
+buildChecklists();
+enhanceSections();
+updateSectionBadges();
+renderGlobalPhotos();
+loadPhotosFromDB();
+renderRecentPanel();
+initSplash();
+applyDiscoveryBannerState();
+applyDictationHintState();
+wireSectionAnchors();
+setDefaults();
+restoreDraft();
+wireAutosave();
+updateProgress();
+// Build the field-print preview every time the user prints
+window.addEventListener("beforeprint", buildFieldPrint);
+// Auto-expand all textareas
+document.querySelectorAll('textarea').forEach(function(ta) {
+  ta.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+});
+</script>
+</body>
+</html>
